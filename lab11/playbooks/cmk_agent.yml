@@ -1,0 +1,52 @@
+---
+
+- name: Install Checkmk agent
+  hosts: cmk-agent
+  connection: local
+  become: true
+
+  pre_tasks:
+    - name: Install required Python packages
+      ansible.builtin.dnf:
+        name: python3-netaddr
+        state: installed
+
+  roles:
+    - checkmk.general.agent
+
+  tasks:
+    - name: Create host
+      checkmk.general.host:
+        name: "{{ inventory_hostname }}"
+        folder: "{{ checkmk_host_settings['folder'] | default(omit) }}"
+        attributes: "{{ checkmk_host_settings['attributes'] | default(omit) }}"
+        state: present
+        server_url: "https://localhost"
+        site: "master"
+        automation_user: "cmkadmin"
+        automation_secret: "{{ checkmk_agent_pass }}"
+        validate_certs: false
+      notify: "Activate Checkmk changes"
+      loop: "{{ checkmk_host_settings | dict2items }}"
+
+    - name: Run service discovery
+      checkmk.general.discovery:
+        host_name: "{{ inventory_hostname }}"
+        state: new
+        server_url: "https://localhost"
+        site: "master"
+        automation_user: "cmkadmin"
+        automation_secret: "{{ checkmk_agent_pass }}"
+        validate_certs: false
+      notify: "Activate Checkmk changes"
+
+  handlers:
+    - name: Activate Checkmk changes
+      checkmk.general.activation:
+        server_url: "https://localhost"
+        site: "master"
+        automation_user: "cmkadmin"
+        automation_secret: "{{ checkmk_agent_pass }}"
+        validate_certs: false
+        force_foreign_changes: true
+      run_once: true

@@ -1,0 +1,22 @@
+---
+
+- name: Install Checkmk server
+  hosts: cmk-server
+  connection: local
+  become: true
+
+  roles:
+    - checkmk.general.server
+
+  tasks:
+    - name: Install mod_ssl for https access
+      ansible.builtin.dnf:
+        name: mod_ssl
+        state: installed
+      notify: Restart httpd
+        
+  handlers:
+    - name: Restart httpd
+      ansible.builtin.service:
+        name: httpd
+        state: restarted

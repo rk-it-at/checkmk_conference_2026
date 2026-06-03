@@ -1,0 +1,77 @@
+---
+
+- name: Install Checkmk server
+  hosts: cmk-server
+  connection: local
+  become: true
+
+  roles:
+    - checkmk.general.server
+
+  tasks:
+    - name: Install mod_ssl for https access
+      ansible.builtin.dnf:
+        name: mod_ssl
+        state: installed
+      notify: Restart httpd
+
+    - name: Create folder
+      checkmk.general.folder:
+        name: "{{ item['name'] | default(omit) }}"
+        path: "{{ item['path'] }}"
+        attributes: "{{ item['attributes'] | default(omit) }}"
+        state: present
+        server_url: "https://localhost"
+        site: "master"
+        automation_user: "cmkadmin"
+        automation_secret: "{{ checkmk_admin_pw }}"
+        validate_certs: false
+      notify: "Activate Checkmk changes"
+      loop: "{{ checkmk_folders }}"
+
+    - name: Create user
+      checkmk.general.user:
+        name: "{{ item['name'] }}"
+        password: "{{ item['password'] | default(omit) }}"
+        email: "{{ item['email'] | default(omit) }}"
+        fullname: "{{ item['fullname'] | default(omit) }}"
+        auth_type: "{{ item['auth_type'] }}"
+        contactgroups: "{{ item['contactgroups'] | default(omit) }}"
+        roles: "{{ item['roles'] | default(omit) }}"
+        state: present
+        server_url: "https://localhost"
+        site: "master"
+        automation_user: "cmkadmin"
+        automation_secret: "{{ checkmk_admin_pw }}"
+        validate_certs: false
+      notify: "Activate Checkmk changes"
+      loop: "{{ checkmk_users }}"
+
+    - name: Create rule
+      checkmk.general.rule:
+        rule: "{{ item['rule'] }}"
+        ruleset: "{{ item['ruleset'] }}"
+        state: present
+        server_url: "https://localhost"
+        site: "master"
+        automation_user: "cmkadmin"
+        automation_secret: "{{ checkmk_admin_pw }}"
+        validate_certs: false
+      notify: "Activate Checkmk changes"
+      loop: "{{ checkmk_rules }}"
+        
+  handlers:
+    - name: Restart httpd
+      ansible.builtin.service:
+        name: httpd
+        state: restarted
+
+    - name: Activate Checkmk changes
+      checkmk.general.activation:
+        server_url: "https://localhost"
+        site: "master"
+        automation_user: "cmkadmin"
+        automation_secret: "{{ checkmk_admin_pw }}"
+        validate_certs: false
+        force_foreign_changes: true
+      run_once: true

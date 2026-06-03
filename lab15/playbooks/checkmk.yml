@@ -1,0 +1,11 @@
+---
+
+plugin: checkmk.general.checkmk
+server_url: https://localhost
+site: master
+automation_user: cmkadmin
+automation_secret: "AnsibleW0rkshop2025!"
+validate_certs: false
+groupsources:
+  - hosttags
+  - sites

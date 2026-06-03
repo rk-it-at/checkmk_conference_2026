@@ -1,0 +1,31 @@
+---
+
+- name: Configure Checkmk downtime
+  hosts: cmk-agent
+  connection: local
+  become: true
+
+  tasks:
+    - name: Create downtime
+      checkmk.general.downtime:
+        host_name: "{{ inventory_hostname }}"
+        end_after:
+          minutes: 15
+        state: present
+        server_url: "https://localhost"
+        site: "master"
+        automation_user: "cmkadmin"
+        automation_secret: "{{ checkmk_agent_pass }}"
+        validate_certs: false
+      notify: "Activate Checkmk changes"
+
+  handlers:
+    - name: Activate Checkmk changes
+      checkmk.general.activation:
+        server_url: "https://localhost"
+        site: "master"
+        automation_user: "cmkadmin"
+        automation_secret: "{{ checkmk_agent_pass }}"
+        validate_certs: false
+        force_foreign_changes: true
+      run_once: true

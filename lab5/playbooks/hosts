@@ -1,0 +1,2 @@
+cmk-server ansible_connection=local
+cmk-agent ansible_connection=local
