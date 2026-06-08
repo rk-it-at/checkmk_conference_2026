@@ -107,46 +107,6 @@ section.right-bg-author {
     #ffffff;
 }
 
-section.right-bg-checkmk {
-  background:
-    var(--cm-line-bg),
-    url("assets/checkmk_overview.png") right 0.5cm center / auto calc(100% - 5cm) no-repeat,
-    url("assets/bg-graphic.png") center 55% / 55% auto no-repeat,
-    url("assets/logo.png") left 0.7cm top 0.35cm / 4.8cm auto no-repeat,
-    url("assets/shape.png") right 0.1cm bottom 0.1cm / var(--cm-shape-size) auto no-repeat,
-    #ffffff;
-}
-
-section.right-bg-eda {
-  background:
-    var(--cm-line-bg),
-    url("assets/eda01.png") right 0.5cm center / auto calc(100% - 5cm) no-repeat,
-    url("assets/bg-graphic.png") center 55% / 55% auto no-repeat,
-    url("assets/logo.png") left 0.7cm top 0.35cm / 4.8cm auto no-repeat,
-    url("assets/shape.png") right 0.1cm bottom 0.1cm / var(--cm-shape-size) auto no-repeat,
-    #ffffff;
-}
-
-section.right-flow {
-  background:
-    var(--cm-line-bg),
-    url("assets/flow.png") right 0.5cm center / auto calc(100% - 4cm) no-repeat,
-    url("assets/bg-graphic.png") center 55% / 55% auto no-repeat,
-    url("assets/logo.png") left 0.7cm top 0.35cm / 4.8cm auto no-repeat,
-    url("assets/shape.png") right 0.1cm bottom 0.1cm / var(--cm-shape-size) auto no-repeat,
-    #ffffff;
-}
-
-section.right-bg-best-practices {
-  background:
-    var(--cm-line-bg),
-    url("assets/best_practices.png") right 0.5cm center / auto calc(100% - 4cm) no-repeat,
-    url("assets/bg-graphic.png") center 55% / 55% auto no-repeat,
-    url("assets/logo.png") left 0.7cm top 0.35cm / 4.8cm auto no-repeat,
-    url("assets/shape.png") right 0.1cm bottom 0.1cm / var(--cm-shape-size) auto no-repeat,
-    #ffffff;
-}
-
 section.code-small pre,
 section.code-small pre code,
 section.code-small code {
