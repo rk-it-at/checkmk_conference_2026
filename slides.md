@@ -7,7 +7,16 @@ paginate: true
 footer: Checkmk Conference #12, 18.06.2026
 ---
 
+<!-- _class: conference-cover -->
 # Automate Checkmk with Ansible
+
+<div class="conference-cover-speaker">
+  <img src="assets/conference-cover-speaker.png" alt="René Koch">
+  <div>
+    <strong>René Koch</strong>
+    <span>DI (FH) René Koch</span>
+  </div>
+</div>
 
 ---
 
@@ -188,7 +197,8 @@ $ su -
 ```bash
 subscription-manager repos --enable codeready-builder-for-rhel-10-$(arch)-rpms
 dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.noarch.rpm
-dnf install ansible
+dnf install ansible-core ansible-collection-ansible-posix \
+    ansible-collection-community-crypto ansible-collection-community-general
 ```
 
 ---
@@ -200,7 +210,8 @@ dnf install ansible
 ```bash
 dnf config-manager --set-enabled crb
 dnf install epel-release
-dnf install ansible
+dnf install ansible-core ansible-collection-ansible-posix \
+    ansible-collection-community-crypto ansible-collection-community-general
 ```
 
 ---
@@ -248,7 +259,7 @@ pip install ansible
 ansible --version
 ```
 ```
-ansible [core 2.16.18]
+ansible [core 2.16.16]
 ```
 
 **NOTE**
@@ -415,15 +426,16 @@ mkdir host_vars
 
 ```yaml
 ---
-checkmk_server_version: "2.5.0"
+checkmk_server_version: "2.5.0p5"
 checkmk_server_edition: "community"
 checkmk_admin_pw: "AnsibleW0rkshop2026!"
 checkmk_server_sites:
   - name: "master"
     version: "{{ checkmk_server_version }}"
     update_conflict_resolution: "abort"
-    state: started
+    edition: "{{ checkmk_server_edition }}"
     admin_pw: "{{ checkmk_admin_pw }}"
+    state: started
 ```
 
 ---
@@ -438,7 +450,7 @@ checkmk_server_sites:
 ```bash
 ansible-playbook -i hosts cmk_server.yml
 
-[WARNING]: Collection checkmk.general does not support Ansible version 2.14.17
+[WARNING]: Collection checkmk.general does not support Ansible version 2.16.16
 
 PLAY [Install Checkmk server] ****************************************************************
 
@@ -565,7 +577,6 @@ cmk-server : ok=17 changed=3 unreachable=0 failed=0 skipped=25 rescued=0 ignored
 - 🛠️ Create required variables
 
 ```bash
-mkdir host_vars
 <EDITOR> host_vars/cmk-agent.yml
 ```
 
@@ -575,7 +586,7 @@ mkdir host_vars
 
 ```yaml
 ---
-checkmk_agent_version: "2.5.0"
+checkmk_agent_version: "2.5.0p5"
 checkmk_agent_edition: "community"
 checkmk_agent_server: localhost
 checkmk_agent_server_validate_certs: "false"
@@ -596,7 +607,7 @@ checkmk_agent_pass: "AnsibleW0rkshop2026!"
 ```bash
 $ ansible-playbook -i hosts cmk_agent.yml
 
-[WARNING]: Collection checkmk.general does not support Ansible version 2.14.17
+[WARNING]: Collection checkmk.general does not support Ansible version 2.16.16
 
 PLAY [Install Checkmk agent] ****************************************************************
 
@@ -715,7 +726,7 @@ checkmk_folders:
 ansible-playbook -i hosts cmk_server.yml
 ```
 ```
-[WARNING]: Collection checkmk.general does not support Ansible version 2.14.17
+[WARNING]: Collection checkmk.general does not support Ansible version 2.16.16
 
 PLAY [Install Checkmk server] ****************************************************************
 
@@ -822,7 +833,7 @@ $ <EDITOR> cmk_agent.yml
 $ ansible-playbook -i hosts cmk_agent.yml
 ```
 ```
-[WARNING]: Collection checkmk.general does not support Ansible version 2.14.17
+[WARNING]: Collection checkmk.general does not support Ansible version 2.16.16
 
 PLAY [Install Checkmk agent] ****************************************************************
 
@@ -881,7 +892,7 @@ cmk-agent : ok=21 changed=2 unreachable=0 failed=0 skipped=25 rescued=0 ignored=
 ansible-playbook -i hosts cmk_agent.yml
 ```
 ```
-[WARNING]: Collection checkmk.general does not support Ansible version 2.14.17
+[WARNING]: Collection checkmk.general does not support Ansible version 2.16.16
 
 PLAY [Install Checkmk agent] ****************************************************************
 
@@ -986,7 +997,7 @@ checkmk_users:
 $ ansible-playbook -i hosts cmk_server.yml
 ```
 ```
-[WARNING]: Collection checkmk.general does not support Ansible version 2.14.17
+[WARNING]: Collection checkmk.general does not support Ansible version 2.16.16
 
 PLAY [Install Checkmk server] ****************************************************************
 
@@ -1052,7 +1063,7 @@ cmk-server : ok=19 changed=3 unreachable=0 failed=0 skipped=25 rescued=0 ignored
 $ ansible-playbook -i hosts cmk_downtime.yml
 ```
 ```
-[WARNING]: Collection checkmk.general does not support Ansible version 2.14.17
+[WARNING]: Collection checkmk.general does not support Ansible version 2.16.16
 
 PLAY [Configure Checkmk downtime] ************************************************************
 
@@ -1142,7 +1153,7 @@ $ <EDITOR> cmk_server.yml
 ansible-playbook -i hosts cmk_server.yml
 ```
 ```
-[WARNING]: Collection checkmk.general does not support Ansible version 2.14.17
+[WARNING]: Collection checkmk.general does not support Ansible version 2.16.16
 
 PLAY [Install Checkmk server] ****************************************************************
 
@@ -1188,7 +1199,7 @@ checkmk_passwords:
 - 🛠️ Create a password for the site **authenticationtest.com**
 - ➕ Add tasks **before the Create rule** task!
 ```bash
-<EDITOR> host_vars/cmk-server.yml
+<EDITOR> cmk_server.yml
 ```
 
 ---
@@ -1239,8 +1250,7 @@ checkmk_rules:
         description: "authenticationtest.com"
       location:
         folder: "/"
-      value_raw: >
-        "{'endpoints': [{'service_name': {'prefix': 'auto', 'name': 'HTTPAuth'}, 'url': 'https://authenticationtest.com/HTTPAuth/'}],
+      value_raw: "{'endpoints': [{'service_name': {'prefix': 'auto', 'name': 'HTTPAuth'}, 'url': 'https://authenticationtest.com/HTTPAuth/'}],
         'standard_settings': {'connection': {'method': ('get', None), 'auth': ('user_auth', {'user': 'user', 'password': 
         ('cmk_postprocessed', 'stored_password', ('authenticationtest_com', ''))})}}}"
       conditions:
@@ -1266,7 +1276,7 @@ checkmk_rules:
 $ ansible-playbook -i hosts cmk_server.yml
 ```
 ```
-[WARNING]: Collection checkmk.general does not support Ansible version 2.14.17
+[WARNING]: Collection checkmk.general does not support Ansible version 2.16.16
 
 PLAY [Install Checkmk server] ****************************************************************
 
@@ -1334,7 +1344,7 @@ cmk-server : ok=21 changed=4 unreachable=0 failed=0 skipped=25 rescued=0 ignored
 $ ansible-playbook -i hosts cmk_server.yml
 ```
 ```
-[WARNING]: Collection checkmk.general does not support Ansible version 2.14.17
+[WARNING]: Collection checkmk.general does not support Ansible version 2.16.16
 
 PLAY [Install Checkmk server] ****************************************************************
 
@@ -1343,7 +1353,7 @@ ok: [cmk-server]
 ...
 TASK [Print Checkmk server version] **********************************************************
 ok: [cmk-server] => {
-  "msg": "Checkmk server version is 2.5.0.cre"
+  "msg": "Checkmk server version is 2.5.0p5.community"
 }
 
 PLAY RECAP ***********************************************************************************
@@ -1396,7 +1406,7 @@ checkmk_tag_groups:
 - 🛠️ Create tags for **testing** and **production** hosts
 - ➕ Add a task after the existing tasks
 ```bash
-<EDITOR> host_vars/cmk-server.yml
+<EDITOR> cmk_server.yml
 ```
 
 ---
@@ -1464,7 +1474,7 @@ groupsources:
 ansible-playbook -i hosts cmk_server.yml
 ```
 ```
-[WARNING]: Collection checkmk.general does not support Ansible version 2.14.17
+[WARNING]: Collection checkmk.general does not support Ansible version 2.16.16
 
 PLAY [Install Checkmk server] ****************************************************************
 
