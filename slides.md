@@ -45,6 +45,7 @@ footer: Checkmk Conference #12, 18.06.2026
   - https://github.com/scrat14
 
 ---
+<!-- _class: conference-divider -->
 
 # 👥 Please introduce yourself
 
@@ -73,6 +74,7 @@ footer: Checkmk Conference #12, 18.06.2026
 - 🚀 Demo: Self-healing with Checkmk, Ansible Automation Platform and rulebooks
 
 ---
+<!-- _class: conference-divider -->
 
 # 🧪 Preparing the LAB environment
 
@@ -155,6 +157,7 @@ $ su -
 > Replace <USERNAME> with your system user
 
 ---
+<!-- _class: conference-divider -->
 
 # 🧪 LAB 1: Configure sudo
 
@@ -177,6 +180,7 @@ $ su -
 > Replace <USERNAME> with your system user
 
 ---
+<!-- _class: conference-divider -->
 
 # ⚙️ Install Ansible
 
@@ -246,6 +250,7 @@ pip install ansible
 ```
 
 ---
+<!-- _class: conference-divider -->
 
 # 🧪 LAB 2: Install Ansible
 
@@ -266,6 +271,7 @@ ansible [core 2.16.16]
 > Depending on your operating system the Ansible version can be different
 
 ---
+<!-- _class: conference-divider -->
 
 # 📋 Prepare Ansible inventory
 
@@ -312,6 +318,7 @@ cmk-agent | SUCCESS => {
 > Ansible does not send an ICMP ping to test the connection, it tries to log into the target machine.
 
 ---
+<!-- _class: conference-divider -->
 
 # 🧪 LAB 3: Add target to Ansible inventory
 
@@ -340,6 +347,7 @@ cmk-agent | SUCCESS => {
 ```
 
 ---
+<!-- _class: conference-divider -->
 
 # 📦 Install Checkmk Collection
 
@@ -370,6 +378,7 @@ ansible-galaxy collection install checkmk.general
 ```
 
 ---
+<!-- _class: conference-divider -->
 
 # 🖥️ Installation of Checkmk server
 
@@ -439,6 +448,7 @@ checkmk_server_sites:
 ```
 
 ---
+<!-- _class: conference-divider -->
 
 # 🧪 LAB 4: Install Checkmk server
 
@@ -496,6 +506,7 @@ cmk-server : ok=20 changed=8 unreachable=0 failed=0 skipped=21 rescued=0 ignored
 ```
 
 ---
+<!-- _class: conference-divider -->
 
 # 🧪 LAB 5: Secure Checkmk server
 
@@ -526,6 +537,7 @@ cmk-server : ok=17 changed=3 unreachable=0 failed=0 skipped=25 rescued=0 ignored
 <div class="corner-logos"></div>
 
 ---
+<!-- _class: conference-divider -->
 
 # 💻 Installation of Checkmk agent
 
@@ -596,6 +608,7 @@ checkmk_agent_pass: "AnsibleW0rkshop2026!"
 ```
 
 ---
+<!-- _class: conference-divider -->
 
 # 🧪 LAB 6: Install Checkmk agent
 
@@ -624,10 +637,12 @@ cmk-agent : ok=19 changed=3 unreachable=0 failed=0 skipped=25 rescued=0 ignored=
 ```
 
 ---
+<!-- _class: conference-divider -->
 
 # 🔧 Checkmk server configuration
 
 ---
+<!-- _class: conference-divider -->
 
 # 🗂️ Checkmk server configuration: Folders
 
@@ -714,6 +729,7 @@ checkmk_folders:
 ```
 
 ---
+<!-- _class: conference-divider -->
 
 # 🧪 LAB 7: Checkmk configuration: Folders
 
@@ -740,6 +756,7 @@ cmk-server : ok=19 changed=3 unreachable=0 failed=0 skipped=25 rescued=0 ignored
 ```
 
 ---
+<!-- _class: conference-divider -->
 
 # 🖥️ Checkmk server configuration: Hosts
 
@@ -821,6 +838,7 @@ $ <EDITOR> cmk_agent.yml
 ```
 
 ---
+<!-- _class: conference-divider -->
 
 # 🧪 LAB 8: Checkmk configuration: Hosts
 
@@ -847,6 +865,7 @@ cmk-agent : ok=21 changed=2 unreachable=0 failed=0 skipped=25 rescued=0 ignored=
 ```
 
 ---
+<!-- _class: conference-divider -->
 
 # 🔎 Checkmk server configuration: Service discovery
 
@@ -880,6 +899,7 @@ cmk-agent : ok=21 changed=2 unreachable=0 failed=0 skipped=25 rescued=0 ignored=
 ```
 
 ---
+<!-- _class: conference-divider -->
 
 # 🧪 LAB 9: Checkmk configuration: Service discovery
 
@@ -916,6 +936,7 @@ cmk-agent : ok=21 changed=2 unreachable=0 failed=0 skipped=25 rescued=0 ignored=
 
 
 ---
+<!-- _class: conference-divider -->
 
 # 👤 Checkmk server configuration: Users
 
@@ -985,6 +1006,7 @@ checkmk_users:
 ```
 
 ---
+<!-- _class: conference-divider -->
 
 # 🧪 LAB 10: Checkmk configuration: Users
 
@@ -1011,6 +1033,7 @@ cmk-server : ok=19 changed=3 unreachable=0 failed=0 skipped=25 rescued=0 ignored
 ```
 
 ---
+<!-- _class: conference-divider -->
 
 # 🕒 Checkmk server configuration: Downtimes
 
@@ -1051,6 +1074,7 @@ cmk-server : ok=19 changed=3 unreachable=0 failed=0 skipped=25 rescued=0 ignored
 ```
 
 ---
+<!-- _class: conference-divider -->
 
 # 🧪 LAB 11: Checkmk configuration: Downtimes
 
@@ -1077,6 +1101,7 @@ cmk-agent : ok=3 changed=1 unreachable=0 failed=0 skipped=0 rescued=0 ignored=0
 ```
 
 ---
+<!-- _class: conference-divider -->
 
 # 📏 Checkmk server configuration: Rules
 
@@ -1141,6 +1166,7 @@ $ <EDITOR> cmk_server.yml
 ```
 
 ---
+<!-- _class: conference-divider -->
 
 # 🧪 LAB 12: Checkmk configuration: Rules
 
@@ -1167,6 +1193,7 @@ cmk-server : ok=20 changed=3 unreachable=0 failed=0 skipped=25 rescued=0 ignored
 ```
 
 ---
+<!-- _class: conference-divider -->
 
 # 🔐 Checkmk server configuration: Passwords
 
@@ -1264,6 +1291,7 @@ checkmk_rules:
 > Create the rule in the Web UI first and access the API to get syntax for rule values!
 
 ---
+<!-- _class: conference-divider -->
 
 # 🧪 LAB 13: Checkmk configuration: Passwords
 
@@ -1299,6 +1327,7 @@ cmk-server : ok=21 changed=4 unreachable=0 failed=0 skipped=25 rescued=0 ignored
 <div class="corner-logos"></div>
 
 ---
+<!-- _class: conference-divider -->
 
 # 🔎 Fetch information from Checkmk with lookup plugins
 
@@ -1332,6 +1361,7 @@ cmk-server : ok=21 changed=4 unreachable=0 failed=0 skipped=25 rescued=0 ignored
 ```
 
 ---
+<!-- _class: conference-divider -->
 
 # 🧪 LAB 14: Checkmk lookups
 
@@ -1361,6 +1391,7 @@ cmk-server : ok=22 changed=3 unreachable=0 failed=0 skipped=25 rescued=0 ignored
 ```
 
 ---
+<!-- _class: conference-divider -->
 
 # 📚 Using Checkmk as Ansible inventory
 
@@ -1462,6 +1493,7 @@ groupsources:
 ```
 
 ---
+<!-- _class: conference-divider -->
 
 # 🧪 LAB 15: Checkmk as Ansible inventory
 
@@ -1541,10 +1573,12 @@ ansible-inventory -i checkmk.yml --host cmk-agent
 ```
 
 ---
+<!-- _class: conference-divider -->
 
 # 🚀 Demo: Self-healing with Checkmk, Ansible Automation Platform and rulebooks
 
 ---
+<!-- _class: conference-divider -->
 
 # 💬 Feedback
 

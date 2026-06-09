@@ -6,58 +6,59 @@
 @import "default";
 
 :root {
-  --cm-green: #51710c;
-  --cm-blue: #0369a3;
-  --cm-orange: #a33e03;
-  --cm-purple: #8e03a3;
-  --cm-yellow: #c99c00;
-  --cm-red: #c9211e;
-  --cm-footer: #51710c;
-  --cm-text: #111111;
-  --cm-shape-size: 3.0cm;
-  --cm-line-bg: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'><line x1='2' y1='7.5' x2='98' y2='7.5' stroke='%23000000' stroke-width='0.3'/><line x1='2' y1='92.5' x2='98' y2='92.5' stroke='%23000000' stroke-width='0.3'/></svg>");
+  --cm-green: #66ffcc;
+  --cm-blue: #77bce4;
+  --cm-orange: #ffb65c;
+  --cm-purple: #8380ff;
+  --cm-yellow: #ffe166;
+  --cm-red: #ff7474;
+  --cm-text: #ffffff;
+  --cm-background: #1e262e;
 }
 
 section {
-  font-family: "Noto Sans", "Liberation Sans", "DejaVu Sans", Arial, sans-serif;
+  font-family: "Inter", "Noto Sans", "Liberation Sans", "DejaVu Sans", Arial, sans-serif;
   color: var(--cm-text);
   position: relative;
+  justify-content: flex-start !important;
+  align-items: stretch;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
   background:
-    var(--cm-line-bg),
-    url("assets/bg-graphic.png") center 55% / 55% auto no-repeat,
-    url("assets/logo.png") left 0.7cm top 0.35cm / 4.8cm auto no-repeat,
-    url("assets/shape.png") right 0.1cm bottom 0.1cm / var(--cm-shape-size) auto no-repeat,
-    #ffffff;
-  padding: 2.2cm 2.2cm 2.2cm 2.2cm;
+    url("assets/conference-content-mark.png") 92.15% 4.14% / 4.78% 8.50% no-repeat,
+    url("assets/conference-content-wordmark.png") 3.07% 96.84% / 9.05% 3.25% no-repeat,
+    var(--cm-background);
+  padding: 3.35cm 2.08cm 1.45cm 1.04cm;
+}
+
+section:not(.conference-cover):not(.conference-divider) {
+  font-size: 32px;
 }
 
 section::before {
-  content: "";
-  position: absolute;
-  left: 0.6cm;
-  right: 0.6cm;
-  top: 1.5cm;
-  bottom: 1.1cm;
-  border-top: 0.04cm solid #000000;
-  border-bottom: 0.04cm solid #000000;
-  pointer-events: none;
-  z-index: 0;
+  display: none;
 }
 
 h1 {
-  color: var(--cm-green);
-  font-weight: 700;
+  position: absolute;
+  top: 1.20cm;
+  left: 1.04cm;
+  width: 30.16cm;
+  margin: 0;
+  color: #ffffff;
+  font-size: 0.84em;
+  font-weight: 600;
+  line-height: 0.95;
+  letter-spacing: 0;
 }
 
 h2 {
-  color: var(--cm-blue);
+  color: #ffffff;
   font-weight: 600;
 }
 
 h3 {
-  color: var(--cm-text);
+  color: #ffffff;
   font-weight: 600;
 }
 
@@ -65,46 +66,71 @@ strong {
   color: var(--cm-green);
 }
 
+blockquote {
+  color: var(--cm-green);
+  border-left-color: var(--cm-green);
+}
+
 ul {
   margin-top: 0.4em;
 }
 
 li::marker {
-  color: var(--cm-green);
+  color: inherit;
 }
 
 footer {
-  position: absolute;
-  bottom: 0.25cm;
-  left: 50%;
-  transform: translateX(-50%);
-  color: var(--cm-footer);
-  font-size: 0.6em;
+  display: none;
 }
 
 section::after {
-  color: var(--cm-footer);
-  font-size: 0.6em;
-  bottom: 0.25cm;
-  left: 0.6cm;
-  right: auto;
-  content: attr(data-marpit-pagination) " / " attr(data-marpit-pagination-total);
-  z-index: 2;
+  content: attr(data-marpit-pagination);
+  position: absolute;
+  right: 3.07%;
+  bottom: 3.16%;
+  left: auto;
+  color: #ffffff;
+  font-family: "Inter", Arial, sans-serif;
+  font-size: 0.42em;
+  line-height: 1;
+  z-index: 3;
 }
 
 section > * {
   position: relative;
-  z-index: 1;
+  z-index: 2;
+}
+
+a {
+  color: var(--cm-green);
+}
+
+table {
+  color: #111111;
+  background: transparent;
+}
+
+table th,
+table td {
+  border-color: #61707c;
+  background: transparent;
+}
+
+table th {
+  color: #ffffff;
+  background: #2c3843;
+}
+
+table tbody tr:nth-child(even) td {
+  background: rgba(97, 112, 124, 0.18);
 }
 
 section.right-bg-author {
   background:
-    var(--cm-line-bg),
-    url("assets/cmk_11.jpg") right 0.5cm center / auto calc(100% - 4cm) no-repeat,
-    url("assets/bg-graphic.png") center 55% / 55% auto no-repeat,
-    url("assets/logo.png") left 0.7cm top 0.35cm / 4.8cm auto no-repeat,
-    url("assets/shape.png") right 0.1cm bottom 0.1cm / var(--cm-shape-size) auto no-repeat,
-    #ffffff;
+    url("assets/cmk_11.jpg") right 1.1cm center / auto calc(100% - 4cm) no-repeat,
+    url("assets/conference-content-mark.png") 92.15% 4.14% / 4.78% 8.50% no-repeat,
+    url("assets/conference-content-wordmark.png") 3.07% 96.84% / 9.05% 3.25% no-repeat,
+    var(--cm-background);
 }
 
 section.conference-cover {
@@ -196,6 +222,59 @@ section.conference-cover .conference-cover-speaker strong {
 section.conference-cover .conference-cover-speaker span {
   font-size: 0.92em;
   font-weight: 400;
+}
+
+section.conference-divider {
+  padding: 0;
+  overflow: hidden;
+  color: #ffffff;
+  font-family: "Inter", Arial, sans-serif;
+  background: #1d2730;
+}
+
+section.conference-divider::before,
+section.conference-divider::after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 37.16%;
+  height: 76.44%;
+  border: 0;
+  background: url("assets/conference-divider-pattern.png") center / 100% 100% no-repeat;
+  pointer-events: none;
+}
+
+section.conference-divider::before {
+  left: 73.45%;
+  top: -16.76%;
+}
+
+section.conference-divider::after {
+  left: 54.43%;
+  top: 43.19%;
+  right: auto;
+  bottom: auto;
+  color: transparent;
+  font-size: 0;
+  transform: rotate(180deg);
+}
+
+section.conference-divider footer {
+  display: none;
+}
+
+section.conference-divider h1 {
+  position: absolute;
+  left: 3.10%;
+  top: 33.33%;
+  width: 54%;
+  margin: 0;
+  color: #ffffff;
+  font-family: "Inter", Arial, sans-serif;
+  font-size: 2em;
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: 0;
 }
 
 section.code-small pre,
