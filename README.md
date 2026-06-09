@@ -17,6 +17,7 @@ Workshop: Automate Checkmk with Ansible
 - [LAB 13](lab13/playbooks): Checkmk configuration: Passwords
 - [LAB 14](lab14/playbooks): Checkmk lookups
 - [LAB 15](lab15/playbooks): Checkmk as Ansible inventory
+- [LAB 16](lab16/playbooks): Self-healing Checkmk agent with Event-Driven Ansible
 
 ## Build slides
 

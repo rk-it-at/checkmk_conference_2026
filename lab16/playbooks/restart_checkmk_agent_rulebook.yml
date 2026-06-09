@@ -1,0 +1,23 @@
+---
+
+- name: Heal a failed Checkmk agent
+  hosts: all
+  gather_facts: false
+
+  sources:
+    - name: Listen for Checkmk notifications
+      ansible.eda.webhook:
+        host: 127.0.0.1
+        port: 5000
+
+  rules:
+    - name: Restart a failed Checkmk agent
+      condition: >-
+        event.payload.what == "SERVICE" and
+        event.payload.servicename == "Check_MK" and
+        event.payload.servicestate == "CRITICAL"
+      action:
+        run_playbook:
+          name: restart_checkmk_agent.yml
+          extra_vars:
+            target_host: "{{ event.payload.hostname }}"

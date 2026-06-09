@@ -71,7 +71,7 @@ footer: Checkmk Conference #12, 18.06.2026
 - 🔧 Checkmk server configuration
 - 🔎 Fetch information with lookup plugins
 - 📚 Using Checkmk as Ansible inventory
-- 🚀 Demo: Self-healing with Checkmk, Ansible Automation Platform and rulebooks
+- ♻️ Self-healing Checkmk agent with Event-Driven Ansible
 
 ---
 <!-- _class: conference-divider -->
@@ -1575,7 +1575,271 @@ ansible-inventory -i checkmk.yml --host cmk-agent
 ---
 <!-- _class: conference-divider -->
 
-# 🚀 Demo: Self-healing with Checkmk, Ansible Automation Platform and rulebooks
+# 🧰 More checkmk.general modules
+
+---
+
+# 🧰 More checkmk.general modules
+
+- ⏱️ Not covered today due to time constraints
+- 👥 `checkmk.general.contact_group`
+  - Manage contact groups
+- 🖥️ `checkmk.general.host_group`
+  - Manage host groups
+- 🧩 `checkmk.general.service_group`
+  - Manage service groups
+- 🗓️ `checkmk.general.timeperiod`
+  - Manage time periods
+
+---
+
+# 🧰 More checkmk.general modules
+
+- 🥖 `checkmk.general.bakery`
+  - Bake and sign Checkmk agents
+- 🏗️ `checkmk.general.site`
+  - Create, update and manage Checkmk sites
+- 📚 Module documentation:
+  https://galaxy.ansible.com/ui/repo/published/checkmk/general/content/
+- 🔎 Local documentation:
+```bash
+ansible-doc checkmk.general.<module_name>
+```
+
+---
+<!-- _class: conference-divider -->
+
+# 🧪 LAB 16: Self-healing Checkmk agent
+
+---
+
+# 🧪 LAB 16: Self-healing Checkmk agent
+
+- 🎯 Goal: automatically restart a failed Checkmk agent
+- 🔔 Checkmk sends service alerts to an EDA webhook
+- 📖 A rulebook matches a critical `Check_MK` service
+- ▶️ `run_playbook` starts the remediation playbook
+- ♻️ The playbook restarts `check-mk-agent.socket`
+
+---
+
+# 🧪 LAB 16: Install Event-Driven Ansible
+
+- 📦 Install the rulebook runner
+```bash
+pip install ansible-rulebook
+```
+- 📚 Install the EDA collection
+```bash
+ansible-galaxy collection install ansible.eda
+```
+- 🔎 Verify the installation
+```bash
+ansible-rulebook --version
+```
+
+---
+
+<!-- _class: code-small -->
+# 🧪 LAB 16: Install the notification script
+
+- 🛠️ Create `notify_eda.sh`
+```bash
+<EDITOR> notify_eda.sh
+```
+```bash
+#!/usr/bin/env bash
+
+HEADER="X-Checkmk-Token"
+TOKEN="${NOTIFY_PARAMETER_1}"
+URL="${NOTIFY_PARAMETER_2}"
+
+JSON=$(cat <<EOF
+{
+  "hostname": "${NOTIFY_HOSTNAME}",
+  "servicename": "${NOTIFY_SERVICEDESC}",
+  "servicestate": "${NOTIFY_SERVICESTATE}",
+  "what": "${NOTIFY_WHAT}"
+}
+EOF
+)
+
+curl --fail --silent --show-error \
+  -H "Content-Type: application/json" -H "${HEADER}: ${TOKEN}" \
+  -d "${JSON}" "${URL}"
+```
+
+---
+
+<!-- _class: code-small -->
+# 🧪 LAB 16: Install the notification script
+
+- 🛠️ Create `cmk_eda.yml`
+```yaml
+---
+- name: Install Checkmk notification script for EDA
+  hosts: cmk-server
+  connection: local
+  become: true
+
+  tasks:
+    - name: Install EDA notification script
+      ansible.builtin.copy:
+        src: notify_eda.sh
+        dest: /omd/sites/master/local/share/check_mk/notifications/notify_eda
+        owner: master
+        group: master
+        mode: "0755"
+      notify: Restart Checkmk site
+
+  handlers:
+    - name: Restart Checkmk site
+      ansible.builtin.command:
+        cmd: omd restart master
+      changed_when: true
+```
+
+---
+
+# 🧪 LAB 16: Install the notification script
+
+- ▶️ Install the script and restart the Checkmk site
+```bash
+ansible-playbook -i hosts cmk_eda.yml
+```
+- 🔎 Verify that Checkmk detects the script
+```bash
+ls -l /omd/sites/master/local/share/check_mk/notifications/notify_eda
+```
+
+---
+
+<!-- _class: code-small -->
+# 🧪 LAB 16: Define the notification rule
+
+- 🛠️ Add to `host_vars/cmk-server.yml`
+```yaml
+checkmk_notifications:
+  - rule_properties:
+      description: "Forward alerts to Event-Driven Ansible"
+      comment: "Managed by Ansible"
+    notification_method:
+      notify_plugin:
+        option: "create_notification_with_the_following_parameters"
+        plugin_params:
+          plugin_name: "notify_eda"
+          parameters:
+            - "checkmk-workshop"
+            - "http://127.0.0.1:5000"
+      notification_bulking:
+        state: "disabled"
+    contact_selection:
+      all_contacts_of_the_notified_object:
+        state: "enabled"
+```
+
+---
+
+<!-- _class: code-small -->
+# 🧪 LAB 16: Create the notification rule
+
+- 🛠️ Add to `cmk_server.yml`
+```yaml
+- name: Create notification rule
+  checkmk.general.notification:
+    rule_config: "{{ item }}"
+    state: present
+    server_url: "https://localhost"
+    site: "master"
+    automation_user: "cmkadmin"
+    automation_secret: "{{ checkmk_admin_pw }}"
+    validate_certs: false
+  notify: "Activate Checkmk changes"
+  loop: "{{ checkmk_notifications }}"
+```
+- ▶️ Apply the notification rule
+```bash
+ansible-playbook -i hosts cmk_server.yml
+```
+
+---
+
+<!-- _class: code-small -->
+# 🧪 LAB 16: Create the remediation playbook
+
+- 🛠️ Create `restart_checkmk_agent.yml`
+```yaml
+---
+- name: Restart Checkmk agent
+  hosts: "{{ target_host | default('cmk-agent') }}"
+  gather_facts: false
+  become: true
+
+  tasks:
+    - name: Restart Checkmk agent socket
+      ansible.builtin.systemd_service:
+        name: check-mk-agent.socket
+        state: restarted
+```
+
+---
+
+<!-- _class: code-small -->
+# 🧪 LAB 16: Create the rulebook
+
+- 🛠️ Create `restart_checkmk_agent_rulebook.yml`
+```yaml
+---
+- name: Heal a failed Checkmk agent
+  hosts: all
+  gather_facts: false
+
+  sources:
+    - name: Listen for Checkmk notifications
+      ansible.eda.webhook:
+        host: 127.0.0.1
+        port: 5000
+
+  rules:
+    - name: Restart a failed Checkmk agent
+      condition: >-
+        event.payload.what == "SERVICE" and
+        event.payload.servicename == "Check_MK" and
+        event.payload.servicestate == "CRITICAL"
+      action:
+        run_playbook:
+          name: restart_checkmk_agent.yml
+          extra_vars:
+            target_host: "{{ event.payload.hostname }}"
+```
+
+---
+
+# 🧪 LAB 16: Run the rulebook
+
+- ▶️ Start the rulebook in the first SSH session
+```bash
+ansible-rulebook \
+  --rulebook restart_checkmk_agent_rulebook.yml \
+  --inventory hosts \
+  --verbose
+```
+- 👂 Keep the rulebook running while it waits on port `5000`
+
+---
+
+# 🧪 LAB 16: Trigger self-healing
+
+- 🛑 Stop the Checkmk agent in the second SSH session
+```bash
+sudo systemctl stop check-mk-agent.socket
+```
+- ⏳ Wait for the `Check_MK` service to become critical
+- 👀 Watch the rulebook run `restart_checkmk_agent.yml`
+- ✅ Confirm that the socket was restarted
+```bash
+systemctl is-active check-mk-agent.socket
+```
 
 ---
 <!-- _class: conference-divider -->

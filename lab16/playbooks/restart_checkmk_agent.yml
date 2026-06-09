@@ -1,0 +1,12 @@
+---
+
+- name: Restart Checkmk agent
+  hosts: "{{ target_host | default('cmk-agent') }}"
+  gather_facts: false
+  become: true
+
+  tasks:
+    - name: Restart Checkmk agent socket
+      ansible.builtin.systemd_service:
+        name: check-mk-agent.socket
+        state: restarted

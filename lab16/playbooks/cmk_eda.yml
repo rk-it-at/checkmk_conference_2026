@@ -1,0 +1,22 @@
+---
+
+- name: Install Checkmk notification script for Event-Driven Ansible
+  hosts: cmk-server
+  connection: local
+  become: true
+
+  tasks:
+    - name: Install EDA notification script
+      ansible.builtin.copy:
+        src: notify_eda.sh
+        dest: /omd/sites/master/local/share/check_mk/notifications/notify_eda
+        owner: master
+        group: master
+        mode: "0755"
+      notify: Restart Checkmk site
+
+  handlers:
+    - name: Restart Checkmk site
+      ansible.builtin.command:
+        cmd: omd restart master
+      changed_when: true
