@@ -17,15 +17,3 @@
         automation_user: "cmkadmin"
         automation_secret: "{{ checkmk_agent_pass }}"
         validate_certs: false
-      notify: "Activate Checkmk changes"
-
-  handlers:
-    - name: Activate Checkmk changes
-      checkmk.general.activation:
-        server_url: "https://localhost"
-        site: "master"
-        automation_user: "cmkadmin"
-        automation_secret: "{{ checkmk_agent_pass }}"
-        validate_certs: false
-        force_foreign_changes: true
-      run_once: true
