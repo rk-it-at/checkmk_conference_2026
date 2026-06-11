@@ -119,8 +119,6 @@ git clone https://github.com/rk-it-at/checkmk_conference_2026.git
 | ansible-ws-3 |  | ansible |  |
 | ansible-ws-4 |  | ansible |  |
 | ansible-ws-5 |  | ansible |  |
-| ansible-ws-6 |  | ansible |  |
-| ansible-ws-7 |  | ansible |  |
 
 ---
 
@@ -129,14 +127,11 @@ git clone https://github.com/rk-it-at/checkmk_conference_2026.git
 
 | Hostname | IP Address | Username | Participant |
 | --- | --- | --- | --- |
+| ansible-ws-6 |  | ansible |  |
+| ansible-ws-7 |  | ansible |  |
 | ansible-ws-8 |  | ansible |  |
 | ansible-ws-9 |  | ansible |  |
 | ansible-ws-10 |  | ansible |  |
-| ansible-ws-11 |  | ansible |  |
-| ansible-ws-12 |  | ansible |  |
-| ansible-ws-13 |  | ansible |  |
-| ansible-ws-14 |  | ansible |  |
-| ansible-ws-15 |  | ansible |  |
 
 ---
 
@@ -199,10 +194,9 @@ $ su -
 - ⚙️ Install Ansible on RHEL 10
 
 ```bash
-subscription-manager repos --enable codeready-builder-for-rhel-10-$(arch)-rpms
-dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.noarch.rpm
-dnf install ansible-core ansible-collection-ansible-posix \
-    ansible-collection-community-crypto ansible-collection-community-general
+sudo subscription-manager repos --enable codeready-builder-for-rhel-10-$(arch)-rpms
+sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.noarch.rpm
+sudo dnf install ansible-core
 ```
 
 ---
@@ -212,10 +206,9 @@ dnf install ansible-core ansible-collection-ansible-posix \
 - ⚙️ Install Ansible on AlmaLinux or Rocky Linux 10
 
 ```bash
-dnf config-manager --set-enabled crb
-dnf install epel-release
-dnf install ansible-core ansible-collection-ansible-posix \
-    ansible-collection-community-crypto ansible-collection-community-general
+sudo dnf config-manager --set-enabled crb
+sudo dnf install epel-release
+sudo dnf install ansible-core
 ```
 
 ---
@@ -225,7 +218,7 @@ dnf install ansible-core ansible-collection-ansible-posix \
 - ⚙️ Install Ansible on openSUSE
 
 ```bash
-zypper install ansible
+sudo zypper install ansible
 ```
 
 ---
@@ -235,19 +228,22 @@ zypper install ansible
 - ⚙️ Install Ansible on Ubuntu 24.04+
 
 ```bash
-apt update
-apt install ansible
+sudo apt update
+sudo apt install ansible
 ```
 
 ---
 
 # ⚙️ Install Ansible – pip
 
-- ⚙️ Install Ansible with pip
+- ⚙️ Install Ansible with pip (or consider uv as an alternative)
 
 ```bash
 pip install ansible
 ```
+
+**NOTE**
+> In non-workshop environments ensure to use a virtual environment!
 
 ---
 <!-- _class: conference-divider -->
@@ -264,11 +260,13 @@ pip install ansible
 ansible --version
 ```
 ```
-ansible [core 2.16.16]
+ansible [core 2.21.0]
 ```
 
 **NOTE**
 > Depending on your operating system the Ansible version can be different
+> If using RHEL 10, ensure to have at least version 2.16.18, due toe a bug with PGC gpg keys and the rpm_key Ansible module!
+> If using RHEL 8, ensure to use at most version 2.16.18!
 
 ---
 <!-- _class: conference-divider -->
@@ -301,14 +299,14 @@ cmk-agent ansible_connection=local
 ansible all -i hosts -m ping
 cmk-server | SUCCESS => {
     "ansible_facts": {
-        "discovered_interpreter_python": "/usr/bin/python3"
+        "discovered_interpreter_python": "/usr/bin/python3.12"
     },
     "changed": false,
     "ping": "pong"
     }
 cmk-agent | SUCCESS => {
     "ansible_facts": {
-        "discovered_interpreter_python": "/usr/bin/python3"
+        "discovered_interpreter_python": "/usr/bin/python3.12"
     },
     "changed": false,
     "ping": "pong"
@@ -387,7 +385,7 @@ ansible-galaxy collection install checkmk.general
 # 🖥️ Installation of Checkmk server
 
 - 📦 Can be installed with the provided server role
-- 💡 Strongly recommend writing your own role to fit your Ansible environment and coding guidelines!
+- 💡 Consider writing your own role to fit your Ansible environment and coding guidelines!
 - 📚 Role documentation:
   https://galaxy.ansible.com/ui/repo/published/checkmk/general/content/role/server/
 
@@ -435,6 +433,7 @@ mkdir host_vars
 
 ```yaml
 ---
+
 checkmk_server_version: "2.5.0p5"
 checkmk_server_edition: "community"
 checkmk_admin_pw: "AnsibleW0rkshop2026!"
@@ -460,19 +459,19 @@ checkmk_server_sites:
 ```bash
 ansible-playbook -i hosts cmk_server.yml
 
-[WARNING]: Collection checkmk.general does not support Ansible version 2.16.16
+PLAY [Install Checkmk server] **************************************************
 
-PLAY [Install Checkmk server] ****************************************************************
 
-TASK [Gathering Facts] ***********************************************************************
+TASK [checkmk.general.server : Validating arguments against arg spec 'main' - Install and manage Checkmk servers] ******************
 ok: [cmk-server]
-
-TASK [checkmk.general.server : Flush Handlers.] **********************************************
 
 ...
 
-PLAY RECAP ***********************************************************************************
-cmk-server : ok=20 changed=8 unreachable=0 failed=0 skipped=21 rescued=0 ignored=0
+RUNNING HANDLER [checkmk.general.server : Start httpd] ****************************************
+ok: [cmk-server]
+
+PLAY RECAP *****************************************************************
+cmk-server                 : ok=23   changed=11   unreachable=0    failed=0    skipped=25   rescued=0    ignored=0
 ```
 
 ---
@@ -519,8 +518,10 @@ cmk-server : ok=20 changed=8 unreachable=0 failed=0 skipped=21 rescued=0 ignored
 ```bash
 ansible-playbook -i hosts cmk_server.yml
 
-PLAY RECAP ***********************************************************************************
-cmk-server : ok=17 changed=3 unreachable=0 failed=0 skipped=25 rescued=0 ignored=0
+...
+
+PLAY RECAP *******************************************************************************************************
+cmk-server                 : ok=20   changed=3    unreachable=0    failed=0    skipped=29   rescued=0    ignored=0
 ```
 
 - 🌐 Access your server: https://<ip_address>/master
@@ -546,7 +547,7 @@ cmk-server : ok=17 changed=3 unreachable=0 failed=0 skipped=25 rescued=0 ignored
 # 💻 Installation of Checkmk agent
 
 - 📦 Can be installed with the provided agent role
-- 💡 Strongly recommend writing your own role to fit your Ansible environment and coding guidelines!
+- 💡 Consider writing your own role to fit your Ansible environment and coding guidelines!
 - 📚 Role documentation:
   https://galaxy.ansible.com/ui/repo/published/checkmk/general/content/role/agent/
 
@@ -572,12 +573,6 @@ cmk-server : ok=17 changed=3 unreachable=0 failed=0 skipped=25 rescued=0 ignored
   connection: local
   become: true
 
-  pre_tasks:
-    - name: Install required Python packages
-      ansible.builtin.dnf:
-        name: python3-netaddr
-        state: installed
-
   roles:
     - checkmk.general.agent
 ```
@@ -598,6 +593,7 @@ cmk-server : ok=17 changed=3 unreachable=0 failed=0 skipped=25 rescued=0 ignored
 
 ```yaml
 ---
+
 checkmk_agent_version: "2.5.0p5"
 checkmk_agent_edition: "community"
 checkmk_agent_server: localhost
@@ -620,20 +616,12 @@ checkmk_agent_pass: "AnsibleW0rkshop2026!"
 ```bash
 $ ansible-playbook -i hosts cmk_agent.yml
 
-[WARNING]: Collection checkmk.general does not support Ansible version 2.16.16
-
 PLAY [Install Checkmk agent] ****************************************************************
-
-TASK [Gathering Facts] ***********************************************************************
-ok: [cmk-agent]
 
 ...
 
-TASK [checkmk.general.agent : Update monitored services and labels on host.] *****************
-ok: [cmk-agent]
-
 PLAY RECAP ***********************************************************************************
-cmk-agent : ok=19 changed=3 unreachable=0 failed=0 skipped=25 rescued=0 ignored=0
+cmk-agent : ok=19 changed=4 unreachable=0 failed=0 skipped=25 rescued=0 ignored=0
 ```
 
 ---
@@ -742,8 +730,6 @@ checkmk_folders:
 ansible-playbook -i hosts cmk_server.yml
 ```
 ```
-[WARNING]: Collection checkmk.general does not support Ansible version 2.16.16
-
 PLAY [Install Checkmk server] ****************************************************************
 
 TASK [Gathering Facts] ***********************************************************************
@@ -752,7 +738,7 @@ ok: [cmk-server]
 ...
 
 PLAY RECAP ***********************************************************************************
-cmk-server : ok=19 changed=3 unreachable=0 failed=0 skipped=25 rescued=0 ignored=0
+cmk-server                 : ok=21   changed=3    unreachable=0    failed=0    skipped=29   rescued=0    ignored=0 
 ```
 
 ---
@@ -851,8 +837,6 @@ $ <EDITOR> cmk_agent.yml
 $ ansible-playbook -i hosts cmk_agent.yml
 ```
 ```
-[WARNING]: Collection checkmk.general does not support Ansible version 2.16.16
-
 PLAY [Install Checkmk agent] ****************************************************************
 
 TASK [Gathering Facts] ***********************************************************************
@@ -861,7 +845,7 @@ ok: [cmk-agent]
 ...
 
 PLAY RECAP ***********************************************************************************
-cmk-agent : ok=21 changed=2 unreachable=0 failed=0 skipped=25 rescued=0 ignored=0
+cmk-agent : ok=21 changed=4 unreachable=0 failed=0 skipped=25 rescued=0 ignored=0
 ```
 
 ---
@@ -912,8 +896,6 @@ cmk-agent : ok=21 changed=2 unreachable=0 failed=0 skipped=25 rescued=0 ignored=
 ansible-playbook -i hosts cmk_agent.yml
 ```
 ```
-[WARNING]: Collection checkmk.general does not support Ansible version 2.16.16
-
 PLAY [Install Checkmk agent] ****************************************************************
 
 TASK [Gathering Facts] ***********************************************************************
@@ -922,7 +904,7 @@ ok: [cmk-agent]
 ...
 
 PLAY RECAP ***********************************************************************************
-cmk-agent : ok=21 changed=2 unreachable=0 failed=0 skipped=25 rescued=0 ignored=0
+cmk-agent : ok=22 changed=4 unreachable=0 failed=0 skipped=25 rescued=0 ignored=0
 ```
 
 ---
@@ -1019,8 +1001,6 @@ checkmk_users:
 $ ansible-playbook -i hosts cmk_server.yml
 ```
 ```
-[WARNING]: Collection checkmk.general does not support Ansible version 2.16.16
-
 PLAY [Install Checkmk server] ****************************************************************
 
 TASK [Gathering Facts] ***********************************************************************
@@ -1029,7 +1009,7 @@ ok: [cmk-server]
 ...
 
 PLAY RECAP ***********************************************************************************
-cmk-server : ok=19 changed=3 unreachable=0 failed=0 skipped=25 rescued=0 ignored=0
+cmk-server                 : ok=22   changed=3    unreachable=0    failed=0    skipped=29   rescued=0    ignored=0
 ```
 
 ---
@@ -1087,17 +1067,16 @@ cmk-server : ok=19 changed=3 unreachable=0 failed=0 skipped=25 rescued=0 ignored
 $ ansible-playbook -i hosts cmk_downtime.yml
 ```
 ```
-[WARNING]: Collection checkmk.general does not support Ansible version 2.16.16
+PLAY [Configure Checkmk downtime] ******************************************************************************************************************************
 
-PLAY [Configure Checkmk downtime] ************************************************************
-
-TASK [Gathering Facts] ***********************************************************************
+TASK [Gathering Facts] *****************************************************************************************************************************************
 ok: [cmk-agent]
 
-...
+TASK [Create downtime] *****************************************************************************************************************************************
+changed: [cmk-agent]
 
-PLAY RECAP ***********************************************************************************
-cmk-agent : ok=3 changed=1 unreachable=0 failed=0 skipped=0 rescued=0 ignored=0
+PLAY RECAP *****************************************************************************************************************************************************
+cmk-agent                  : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0  
 ```
 
 ---
@@ -1179,8 +1158,6 @@ $ <EDITOR> cmk_server.yml
 ansible-playbook -i hosts cmk_server.yml
 ```
 ```
-[WARNING]: Collection checkmk.general does not support Ansible version 2.16.16
-
 PLAY [Install Checkmk server] ****************************************************************
 
 TASK [Gathering Facts] ***********************************************************************
@@ -1189,7 +1166,7 @@ ok: [cmk-server]
 ...
 
 PLAY RECAP ***********************************************************************************
-cmk-server : ok=20 changed=3 unreachable=0 failed=0 skipped=25 rescued=0 ignored=0
+cmk-server                 : ok=23   changed=3    unreachable=0    failed=0    skipped=29   rescued=0    ignored=0 
 ```
 
 ---
@@ -1304,8 +1281,6 @@ checkmk_rules:
 $ ansible-playbook -i hosts cmk_server.yml
 ```
 ```
-[WARNING]: Collection checkmk.general does not support Ansible version 2.16.16
-
 PLAY [Install Checkmk server] ****************************************************************
 
 TASK [Gathering Facts] ***********************************************************************
@@ -1314,7 +1289,7 @@ ok: [cmk-server]
 ...
 
 PLAY RECAP ***********************************************************************************
-cmk-server : ok=21 changed=4 unreachable=0 failed=0 skipped=25 rescued=0 ignored=0
+cmk-server                 : ok=24   changed=4    unreachable=0    failed=0    skipped=29   rescued=0    ignored=0
 ```
 
 ---
@@ -1374,20 +1349,22 @@ cmk-server : ok=21 changed=4 unreachable=0 failed=0 skipped=25 rescued=0 ignored
 $ ansible-playbook -i hosts cmk_server.yml
 ```
 ```
-[WARNING]: Collection checkmk.general does not support Ansible version 2.16.16
-
 PLAY [Install Checkmk server] ****************************************************************
 
 TASK [Gathering Facts] ***********************************************************************
 ok: [cmk-server]
+
 ...
+
 TASK [Print Checkmk server version] **********************************************************
 ok: [cmk-server] => {
   "msg": "Checkmk server version is 2.5.0p5.community"
 }
 
+...
+
 PLAY RECAP ***********************************************************************************
-cmk-server : ok=22 changed=3 unreachable=0 failed=0 skipped=25 rescued=0 ignored=0
+cmk-server                 : ok=25   changed=4    unreachable=0    failed=0    skipped=29   rescued=0    ignored=0
 ```
 
 ---
@@ -1493,6 +1470,17 @@ groupsources:
 ```
 
 ---
+
+# Spoiler-Alert: Upcoming changes in inventory plugin
+
+- Restrict hosts based on folder (recursive/non-recursive)
+- Exclude hosts based on certain tags
+- Convert hostnames to lower case
+- Append domains to hosts
+
+Currently in development: https://github.com/Checkmk/ansible-collection-checkmk.general/blob/feature/inventory-host-filtering/plugins/inventory/checkmk.py
+
+---
 <!-- _class: conference-divider -->
 
 # 🧪 LAB 15: Checkmk as Ansible inventory
@@ -1506,8 +1494,6 @@ groupsources:
 ansible-playbook -i hosts cmk_server.yml
 ```
 ```
-[WARNING]: Collection checkmk.general does not support Ansible version 2.16.16
-
 PLAY [Install Checkmk server] ****************************************************************
 
 TASK [Gathering Facts] ***********************************************************************
@@ -1516,7 +1502,7 @@ ok: [cmk-server]
 ...
 
 PLAY RECAP ***********************************************************************************
-cmk-server : ok=23 changed=4 unreachable=0 failed=0 skipped=25 rescued=0 ignored=0
+cmk-server                 : ok=26   changed=5    unreachable=0    failed=0    skipped=29   rescued=0    ignored=0
 ```
 
 ---
@@ -1560,7 +1546,7 @@ ansible-inventory -i checkmk.yml --host cmk-agent
     "checkmk_agent_server_validate_certs": "false",
     "checkmk_agent_site": "master",
     "checkmk_agent_user": "cmkadmin",
-    "checkmk_agent_version": "2.5.0",
+    "checkmk_agent_version": "2.5.0p5",
     "checkmk_host_settings": {
         "attributes": {
             "ipaddress": "127.0.0.1"
@@ -1599,17 +1585,17 @@ ansible-inventory -i checkmk.yml --host cmk-agent
   - Bake and sign Checkmk agents
 - 🏗️ `checkmk.general.site`
   - Create, update and manage Checkmk sites
+- `checkmk.general.dcd`
+  - Manage dynamic host management
+- `checmk.general.ldap`
+  - Manage LDAP connections
 - 📚 Module documentation:
   https://galaxy.ansible.com/ui/repo/published/checkmk/general/content/
-- 🔎 Local documentation:
-```bash
-ansible-doc checkmk.general.<module_name>
-```
 
 ---
 <!-- _class: conference-divider -->
 
-# 🧪 LAB 16: Self-healing Checkmk agent
+# 🧪 (Bonus) LAB 16: Self-healing Checkmk agent
 
 ---
 
@@ -1626,67 +1612,101 @@ ansible-doc checkmk.general.<module_name>
 # 🧪 LAB 16: Install Event-Driven Ansible
 
 - 📦 Install the rulebook runner
+
 ```bash
 pip install ansible-rulebook
 ```
+
+- Install OpenJDP
+
+```bash
+sudo dnf install java-latest-openjdk
+```
+
 - 📚 Install the EDA collection
+
 ```bash
 ansible-galaxy collection install ansible.eda
-```
-- 🔎 Verify the installation
-```bash
-ansible-rulebook --version
 ```
 
 ---
 
-<!-- _class: code-small -->
+# 🧪 LAB 16: Install Event-Driven Ansible
+
+- 🔎 Verify the installation
+
+```bash
+ansible-rulebook --version
+```
+```
+ansible-rulebook [1.3.0]
+  Executable location = /home/ansible/.local/bin/ansible-rulebook
+  Drools_jpy version = 0.4.0
+  Java home = /usr/lib/jvm/java-latest-openjdk
+  Java version = 26.0.1
+  Ansible core version = 2.21.0
+  Python version = 3.12.13
+  Python executable = /usr/bin/python3
+  Platform = Linux-6.12.0-211.20.1.el10_2.x86_64-x86_64-with-glibc2.39
+```
+
+---
+
 # 🧪 LAB 16: Install the notification script
 
 - 🛠️ Create `notify_eda.sh`
 ```bash
 <EDITOR> notify_eda.sh
 ```
+
+---
+
+# 🧪 LAB 16: Install the notification script
+
 ```bash
 #!/usr/bin/env bash
+# Event Driven Ansible
 
-HEADER="X-Checkmk-Token"
-TOKEN="${NOTIFY_PARAMETER_1}"
-URL="${NOTIFY_PARAMETER_2}"
+URL="${NOTIFY_PARAMETER_1}"
 
 JSON=$(cat <<EOF
 {
   "hostname": "${NOTIFY_HOSTNAME}",
+  "hostoutput": "${NOTIFY_HOSTOUTPUT}",
+  "hoststate": "${NOTIFY_HOSTSTATE}",
   "servicename": "${NOTIFY_SERVICEDESC}",
+  "serviceoutput": "${NOTIFY_SERVICEOUTPUT}",
   "servicestate": "${NOTIFY_SERVICESTATE}",
+  "date": "${NOTIFY_SHORTDATETIME}",
+  "type": "${NOTIFY_NOTIFICATIONTYPE}",
   "what": "${NOTIFY_WHAT}"
 }
 EOF
 )
 
-curl --fail --silent --show-error \
-  -H "Content-Type: application/json" -H "${HEADER}: ${TOKEN}" \
-  -d "${JSON}" "${URL}"
+curl -X POST -H "Content-Type: application/json" -d "${JSON}" ${URL}
+exit $?
 ```
 
 ---
 
-<!-- _class: code-small -->
 # 🧪 LAB 16: Install the notification script
 
-- 🛠️ Create `cmk_eda.yml`
-```yaml
----
-- name: Install Checkmk notification script for EDA
-  hosts: cmk-server
-  connection: local
-  become: true
+- 🛠️ Deploy notification script to Checkmk server
+```bash
+<EDITOR> cmk_server.yml
+```
 
-  tasks:
+---
+
+# 🧪 LAB 16: Install the notification script
+
+```yaml
+...
     - name: Install EDA notification script
       ansible.builtin.copy:
         src: notify_eda.sh
-        dest: /omd/sites/master/local/share/check_mk/notifications/notify_eda
+        dest: /omd/sites/master/local/share/check_mk/notifications/notify_eda.sh
         owner: master
         group: master
         mode: "0755"
@@ -1694,85 +1714,128 @@ curl --fail --silent --show-error \
 
   handlers:
     - name: Restart Checkmk site
-      ansible.builtin.command:
-        cmd: omd restart master
-      changed_when: true
+      ansible.builtin.command: omd restart master
+...
 ```
 
 ---
 
 # 🧪 LAB 16: Install the notification script
 
-- ▶️ Install the script and restart the Checkmk site
+- ▶️ Ensure the notification script is installed
+
 ```bash
-ansible-playbook -i hosts cmk_eda.yml
+ansible-playbook -i hosts cmk_server.yml
 ```
-- 🔎 Verify that Checkmk detects the script
-```bash
-ls -l /omd/sites/master/local/share/check_mk/notifications/notify_eda
+```
+PLAY [Install Checkmk server] ****************************************************************
+
+TASK [Gathering Facts] ***********************************************************************
+ok: [cmk-server]
+
+...
+
+PLAY RECAP ***********************************************************************************
+cmk-server                 : ok=27   changed=7    unreachable=0    failed=0    skipped=29   rescued=0    ignored=0
 ```
 
 ---
 
-<!-- _class: code-small -->
 # 🧪 LAB 16: Define the notification rule
 
-- 🛠️ Add to `host_vars/cmk-server.yml`
+- Create notification rule **Forward alerts to Event-Driven Ansible** and send notifications to **localhost:5050**.
+```bash
+<EDITOR> host_vars/cmk-server.yml
+```
+---
+
+# 🧪 LAB 16: Define the notification rule
+
+<!-- _class: code-small -->
 ```yaml
 checkmk_notifications:
   - rule_properties:
       description: "Forward alerts to Event-Driven Ansible"
-      comment: "Managed by Ansible"
     notification_method:
       notify_plugin:
-        option: "create_notification_with_the_following_parameters"
+        option: "create_notification_with_custom_parameters"
         plugin_params:
-          plugin_name: "notify_eda"
-          parameters:
-            - "checkmk-workshop"
-            - "http://127.0.0.1:5000"
+          plugin_name: "notify_eda.sh"
+          params:
+            - "http://127.0.0.1:5050"
       notification_bulking:
         state: "disabled"
     contact_selection:
-      all_contacts_of_the_notified_object:
+      members_of_contact_groups:
+        value:
+          - all
         state: "enabled"
 ```
 
 ---
 
-<!-- _class: code-small -->
+# 🧪 LAB 16: Define the notification rule
+
+- Create notification rule **Forward alerts to Event-Driven Ansible** and send notifications to **localhost:5050**.
+```bash
+<EDITOR> cmk_server.yml
+```
+---
+
 # 🧪 LAB 16: Create the notification rule
 
-- 🛠️ Add to `cmk_server.yml`
 ```yaml
-- name: Create notification rule
-  checkmk.general.notification:
-    rule_config: "{{ item }}"
-    state: present
-    server_url: "https://localhost"
-    site: "master"
-    automation_user: "cmkadmin"
-    automation_secret: "{{ checkmk_admin_pw }}"
-    validate_certs: false
-  notify: "Activate Checkmk changes"
-  loop: "{{ checkmk_notifications }}"
+...
+    - name: Create notification rule
+      checkmk.general.notification:
+        rule_config: "{{ item }}"
+        state: present
+        server_url: "https://localhost"
+        site: "master"
+        automation_user: "cmkadmin"
+        automation_secret: "{{ checkmk_admin_pw }}"
+        validate_certs: false
+      notify: "Activate Checkmk changes"
+      loop: "{{ checkmk_notifications }}"
 ```
-- ▶️ Apply the notification rule
+
+---
+
+- Ensure notification rule is created
+
 ```bash
 ansible-playbook -i hosts cmk_server.yml
 ```
+```
+PLAY [Install Checkmk server] ****************************************************************
+
+TASK [Gathering Facts] ***********************************************************************
+ok: [cmk-server]
+
+...
+
+PLAY RECAP ***********************************************************************************
+cmk-server                 : ok=28   changed=6    unreachable=0    failed=0    skipped=29   rescued=0    ignored=0
+```
 
 ---
 
-<!-- _class: code-small -->
 # 🧪 LAB 16: Create the remediation playbook
 
-- 🛠️ Create `restart_checkmk_agent.yml`
+- 🛠️ Create playbook to **Restart Checkmk agent**.
+
+```bash
+<EDITOR> restart_checkmk_agent.yml
+```
+---
+
+# 🧪 LAB 16: Create the remediation playbook
+
 ```yaml
 ---
+
 - name: Restart Checkmk agent
   hosts: "{{ target_host | default('cmk-agent') }}"
-  gather_facts: false
   become: true
 
   tasks:
@@ -1784,13 +1847,22 @@ ansible-playbook -i hosts cmk_server.yml
 
 ---
 
-<!-- _class: code-small -->
 # 🧪 LAB 16: Create the rulebook
 
-- 🛠️ Create `restart_checkmk_agent_rulebook.yml`
+- 🛠️ Create rulebook to **Listen on port 5050**, require password **checkmk-workshop** and check for **failed Checkmk agent**.
+
+```bash
+mkdir rulebooks
+<EDITOR> rulebooks/restart_checkmk_agent.yml
+```
+
+---
+
+# 🧪 LAB 16: Create the rulebook
+
 ```yaml
 ---
-- name: Heal a failed Checkmk agent
+- name: Restart Checkmk agent
   hosts: all
   gather_facts: false
 
@@ -1798,12 +1870,11 @@ ansible-playbook -i hosts cmk_server.yml
     - name: Listen for Checkmk notifications
       ansible.eda.webhook:
         host: 127.0.0.1
-        port: 5000
+        port: 5050
 
   rules:
     - name: Restart a failed Checkmk agent
       condition: >-
-        event.payload.what == "SERVICE" and
         event.payload.servicename == "Check_MK" and
         event.payload.servicestate == "CRITICAL"
       action:
@@ -1818,27 +1889,53 @@ ansible-playbook -i hosts cmk_server.yml
 # 🧪 LAB 16: Run the rulebook
 
 - ▶️ Start the rulebook in the first SSH session
+
 ```bash
-ansible-rulebook \
-  --rulebook restart_checkmk_agent_rulebook.yml \
-  --inventory hosts \
-  --verbose
+ansible-rulebook -i hosts -r rulebooks/restart_checkmk_agent.yml --verbose
 ```
-- 👂 Keep the rulebook running while it waits on port `5000`
+```
+2026-06-11 17:35:09,830 - ansible_rulebook.app - INFO - Starting sources
+2026-06-11 17:35:09,830 - ansible_rulebook.app - INFO - Starting rules
+...
+2026-06-11 17:35:10,506 - ansible_rulebook.rule_set_runner - INFO - Waiting for actions on events from Restart Checkmk agent
+2026-06-11 17:35:10,506 - ansible_rulebook.rule_set_runner - INFO - Waiting for events, ruleset: Restart Checkmk agent
+```
+
+- 👂 Keep the rulebook running while it waits on port `5050`!
 
 ---
 
 # 🧪 LAB 16: Trigger self-healing
 
 - 🛑 Stop the Checkmk agent in the second SSH session
+
 ```bash
 sudo systemctl stop check-mk-agent.socket
 ```
+
 - ⏳ Wait for the `Check_MK` service to become critical
 - 👀 Watch the rulebook run `restart_checkmk_agent.yml`
 - ✅ Confirm that the socket was restarted
-```bash
-systemctl is-active check-mk-agent.socket
+
+---
+
+# 🧪 LAB 16: Trigger self-healing
+
+```
+...
+2026-06-11 17:42:55,255 - ansible_rulebook.rule_set_runner - INFO - Waiting for events, ruleset: Restart Checkmk agent
+2026-06-11 17:43:02,511 - aiohttp.access - INFO - 127.0.0.1 [11/Jun/2026:17:43:02 +0200] "POST / HTTP/1.1" 200 152 "-" "curl/8.12.1"
+
+PLAY [Restart Checkmk agent] ***************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [cmk-agent]
+
+TASK [Restart Checkmk agent socket] ********************************************
+changed: [cmk-agent]
+
+PLAY RECAP *********************************************************************
+cmk-agent                  : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ```
 
 ---

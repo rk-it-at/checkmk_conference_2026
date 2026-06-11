@@ -47,6 +47,19 @@
       notify: "Activate Checkmk changes"
       loop: "{{ checkmk_users }}"
 
+    - name: Create rule
+      checkmk.general.rule:
+        rule: "{{ item['rule'] }}"
+        ruleset: "{{ item['ruleset'] }}"
+        state: present
+        server_url: "https://localhost"
+        site: "master"
+        automation_user: "cmkadmin"
+        automation_secret: "{{ checkmk_admin_pw }}"
+        validate_certs: false
+      notify: "Activate Checkmk changes"
+      loop: "{{ checkmk_rules }}"
+
     - name: Create password
       checkmk.general.password:
         name: "{{ item['name'] }}"
@@ -61,19 +74,6 @@
       notify: "Activate Checkmk changes"
       loop: "{{ checkmk_passwords }}"
 
-    - name: Create rule
-      checkmk.general.rule:
-        rule: "{{ item['rule'] }}"
-        ruleset: "{{ item['ruleset'] }}"
-        state: present
-        server_url: "https://localhost"
-        site: "master"
-        automation_user: "cmkadmin"
-        automation_secret: "{{ checkmk_admin_pw }}"
-        validate_certs: false
-      notify: "Activate Checkmk changes"
-      loop: "{{ checkmk_rules }}"
-        
   handlers:
     - name: Restart httpd
       ansible.builtin.service:

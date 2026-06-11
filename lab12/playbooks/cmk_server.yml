@@ -59,7 +59,7 @@
         validate_certs: false
       notify: "Activate Checkmk changes"
       loop: "{{ checkmk_rules }}"
-        
+
   handlers:
     - name: Restart httpd
       ansible.builtin.service:

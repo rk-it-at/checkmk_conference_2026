@@ -47,6 +47,19 @@
       notify: "Activate Checkmk changes"
       loop: "{{ checkmk_users }}"
 
+    - name: Create rule
+      checkmk.general.rule:
+        rule: "{{ item['rule'] }}"
+        ruleset: "{{ item['ruleset'] }}"
+        state: present
+        server_url: "https://localhost"
+        site: "master"
+        automation_user: "cmkadmin"
+        automation_secret: "{{ checkmk_admin_pw }}"
+        validate_certs: false
+      notify: "Activate Checkmk changes"
+      loop: "{{ checkmk_rules }}"
+
     - name: Create password
       checkmk.general.password:
         name: "{{ item['name'] }}"
@@ -61,19 +74,6 @@
       notify: "Activate Checkmk changes"
       loop: "{{ checkmk_passwords }}"
 
-    - name: Create rule
-      checkmk.general.rule:
-        rule: "{{ item['rule'] }}"
-        ruleset: "{{ item['ruleset'] }}"
-        state: present
-        server_url: "https://localhost"
-        site: "master"
-        automation_user: "cmkadmin"
-        automation_secret: "{{ checkmk_admin_pw }}"
-        validate_certs: false
-      notify: "Activate Checkmk changes"
-      loop: "{{ checkmk_rules }}"
-
     - name: Create tag group
       checkmk.general.tag_group:
         name: "{{ item['name'] }}"
@@ -87,6 +87,15 @@
         validate_certs: false
       notify: "Activate Checkmk changes"
       loop: "{{ checkmk_tag_groups }}"
+
+    - name: Install EDA notification script
+      ansible.builtin.copy:
+        src: notify_eda.sh
+        dest: /omd/sites/master/local/share/check_mk/notifications/notify_eda.sh
+        owner: master
+        group: master
+        mode: "0755"
+      notify: Restart Checkmk site
 
     - name: Create notification rule
       checkmk.general.notification:
@@ -103,13 +112,13 @@
     - name: Print Checkmk server version
       ansible.builtin.debug:
          msg: "Checkmk server version is {{ lookup('checkmk.general.version',
-                                             server_url='https://localhost',
-                                             site='master',
-                                             automation_user='cmkadmin',
-                                             automation_secret=checkmk_admin_pw,
-                                             validate_certs=false)
+                              server_url='https://localhost',
+                              site='master',
+                              automation_user='cmkadmin',
+                              automation_secret=checkmk_admin_pw,
+                              validate_certs=false)
          }}"
-        
+
   handlers:
     - name: Restart httpd
       ansible.builtin.service:
@@ -125,3 +134,6 @@
         validate_certs: false
         force_foreign_changes: true
       run_once: true
+
+    - name: Restart Checkmk site
+      ansible.builtin.command: omd restart master

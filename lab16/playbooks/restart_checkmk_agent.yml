@@ -2,7 +2,6 @@
 
 - name: Restart Checkmk agent
   hosts: "{{ target_host | default('cmk-agent') }}"
-  gather_facts: false
   become: true
 
   tasks:

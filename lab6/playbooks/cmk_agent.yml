@@ -5,11 +5,5 @@
   connection: local
   become: true
 
-  pre_tasks:
-    - name: Install required Python packages
-      ansible.builtin.dnf:
-        name: python3-netaddr
-        state: installed
-
   roles:
     - checkmk.general.agent

@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
+# Event Driven Ansible
 
-HEADER="X-Checkmk-Token"
-TOKEN="${NOTIFY_PARAMETER_1}"
-URL="${NOTIFY_PARAMETER_2}"
+URL="${NOTIFY_PARAMETER_1}"
 
 JSON=$(cat <<EOF
 {
@@ -19,9 +18,5 @@ JSON=$(cat <<EOF
 EOF
 )
 
-curl --fail --silent --show-error \
-  --request POST \
-  --header "Content-Type: application/json" \
-  --header "${HEADER}: ${TOKEN}" \
-  --data "${JSON}" \
-  "${URL}"
+curl -X POST -H "Content-Type: application/json" -d "${JSON}" ${URL}
+exit $?
