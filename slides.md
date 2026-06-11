@@ -23,13 +23,13 @@ footer: Checkmk Conference #12, 18.06.2026
 <!-- _class: right-bg-author -->
 # 👋 About me
 
-- René Koch
-- Self-employed consultant for:
+- 👤 René Koch
+- 💼 Self-employed consultant for:
   - Red Hat Ansible (Automation Platform)
   - Red Hat Enterprise Linux
   - Red Hat Satellite
   - Red Hat Identity Management (IPA)
-- Experienced monitoring user (Nagios, Icinga,
+- 📈 Experienced monitoring user (Nagios, Icinga,
   Checkmk)
 
 ---
@@ -37,7 +37,7 @@ footer: Checkmk Conference #12, 18.06.2026
 <!-- _class: right-bg-author -->
 # 👋 About me
 
-- René Koch
+- 👤 René Koch
   - rkoch@rk-it.at
   - +43 660 / 464 0 464
   - https://www.linkedin.com/in/rk-it-at
@@ -53,19 +53,19 @@ footer: Checkmk Conference #12, 18.06.2026
 
 # 🕘 Timetable
 
-- 09:00 – 10:30: Workshop
-- 10:30 – 10:45: Break
-- 10:45 – 12:30: Workshop
-- 12:30 – 13:45: Lunch break
-- 13:45 – 15:30: Workshop
-- 15:30 – 15:45: Break
-- 15:45 – 17:15: Workshop
+- 🧑‍🏫 09:00 – 10:30: Workshop
+- ☕ 10:30 – 10:45: Break
+- 🧑‍🏫 10:45 – 12:30: Workshop
+- 🍽️ 12:30 – 13:45: Lunch break
+- 🧑‍🏫 13:45 – 15:30: Workshop
+- ☕ 15:30 – 15:45: Break
+- 🧑‍🏫 15:45 – 17:15: Workshop
 
 ---
 
 # 🧭 Table of contents
 
-- 🧪 Prepare LAB environment
+- 🧪 Prepare the LAB environment
 - 🖥️ Installation of Checkmk server
 - 💻 Installation of Checkmk agents
 - 🔧 Checkmk server configuration
@@ -148,8 +148,8 @@ $ su -
 
 **NOTE**
 > Use the root user to run this command!
-> Replace <EDITOR> with vi, nano or your favorite editor
-> Replace <USERNAME> with your system user
+> Replace <EDITOR> with vi, nano or your favorite editor.
+> Replace <USERNAME> with your system user.
 
 ---
 <!-- _class: conference-divider -->
@@ -171,8 +171,8 @@ $ su -
 
 **NOTE**
 > Use the root user to run this command!
-> Replace <EDITOR> with vi, nano or your favorite editor
-> Replace <USERNAME> with your system user
+> Replace <EDITOR> with vi, nano or your favorite editor.
+> Replace <USERNAME> with your system user.
 
 ---
 <!-- _class: conference-divider -->
@@ -243,7 +243,7 @@ pip install ansible
 ```
 
 **NOTE**
-> In non-workshop environments ensure to use a virtual environment!
+> Use a virtual environment outside the workshop!
 
 ---
 <!-- _class: conference-divider -->
@@ -264,9 +264,9 @@ ansible [core 2.21.0]
 ```
 
 **NOTE**
-> Depending on your operating system the Ansible version can be different
-> If using RHEL 10, ensure to have at least version 2.16.18, due toe a bug with PGC gpg keys and the rpm_key Ansible module!
-> If using RHEL 8, ensure to use at most version 2.16.18!
+> The available Ansible version depends on your operating system.
+> On RHEL 10, use at least version 2.16.18 due to a bug involving PQC GPG keys and the `rpm_key` Ansible module!
+> On RHEL 8, use at most version 2.16.18!
 
 ---
 <!-- _class: conference-divider -->
@@ -277,7 +277,7 @@ ansible [core 2.21.0]
 
 # 📋 Prepare Ansible inventory
 
-- 🛠️ Create folder for your Ansible code
+- 🛠️ Create a folder for your Ansible code
 ```bash
 mkdir playbooks
 cd playbooks
@@ -287,14 +287,14 @@ cmk-agent ansible_connection=local
 ```
 
 **NOTE**
-> Replace <EDITOR> with vi, nano or your favorite editor
+> Replace <EDITOR> with vi, nano or your favorite editor.
 
 ---
 
 <!-- _class: code-small -->
-# 🔌 Test connection to target server
+# 🔌 Test connection to target hosts
 
-- ✅ Make sure your target server is reachable
+- ✅ Make sure your target hosts are reachable
 ```yaml
 ansible all -i hosts -m ping
 cmk-server | SUCCESS => {
@@ -313,7 +313,7 @@ cmk-agent | SUCCESS => {
     }
 ```
 
-> Ansible does not send an ICMP ping to test the connection, it tries to log into the target machine.
+> Ansible does not send an ICMP ping to test the connection; it tries to log in to the target machine.
 
 ---
 <!-- _class: conference-divider -->
@@ -325,7 +325,7 @@ cmk-agent | SUCCESS => {
 <!-- _class: code-small -->
 # 🧪 LAB 3: Add target to Ansible inventory
 
-- ✅ Make sure your target server is reachable
+- ✅ Make sure your target hosts are reachable
 ```yaml
 $ ansible all -i hosts -m ping
 cmk-server | SUCCESS => {
@@ -353,7 +353,7 @@ cmk-agent | SUCCESS => {
 
 # 📦 Install Checkmk Collection
 
-- 📦 Simplified and consistent content delivery
+- 📦 Collections provide simplified and consistent content delivery
 - 📦 The collection contains:
   - Modules
   - Playbooks
@@ -384,7 +384,7 @@ ansible-galaxy collection install checkmk.general
 
 # 🖥️ Installation of Checkmk server
 
-- 📦 Can be installed with the provided server role
+- 📦 Install Checkmk with the provided server role
 - 💡 Consider writing your own role to fit your Ansible environment and coding guidelines!
 - 📚 Role documentation:
   https://galaxy.ansible.com/ui/repo/published/checkmk/general/content/role/server/
@@ -546,7 +546,7 @@ cmk-server                 : ok=20   changed=3    unreachable=0    failed=0    s
 
 # 💻 Installation of Checkmk agent
 
-- 📦 Can be installed with the provided agent role
+- 📦 Install the Checkmk agent with the provided agent role
 - 💡 Consider writing your own role to fit your Ansible environment and coding guidelines!
 - 📚 Role documentation:
   https://galaxy.ansible.com/ui/repo/published/checkmk/general/content/role/agent/
@@ -638,8 +638,8 @@ cmk-agent : ok=19 changed=4 unreachable=0 failed=0 skipped=25 rescued=0 ignored=
 
 # 🗂️ Checkmk configuration: Folders
 
-- 🛠️ Create two folders - **/linux** and **/linux/checkmk**
-- ➕ Add a **label** to folder linux and ensure **Checkmk agent** is used for monitoring
+- 🛠️ Create two folders: **/linux** and **/linux/checkmk**
+- ➕ Add a **label** to `/linux` and ensure the **Checkmk agent** is used for monitoring
 
 ```bash
 <EDITOR> host_vars/cmk-server.yml
@@ -661,14 +661,14 @@ checkmk_folders:
 ```
 
 **NOTE**
-> Create the folder in the Web UI first and access the API to get syntax for attributes!
+> Create the folder in the web UI first and use the API to determine the attribute syntax!
 
 ---
 
 # 🗂️ Checkmk configuration: Folders
 
-- 🛠️ Create two folders - **/linux** and **/linux/checkmk**
-- ➕ Add a **label** to folder linux and ensure **Checkmk agent** is used for monitoring
+- 🛠️ Create two folders: **/linux** and **/linux/checkmk**
+- ➕ Add a **label** to `/linux` and ensure the **Checkmk agent** is used for monitoring
 - ➕ Append a new task to the existing tasks
 
 ```bash
@@ -725,7 +725,7 @@ checkmk_folders:
 
 # 🧪 LAB 7: Checkmk configuration: Folders
 
-- ✅ Ensure folder is created
+- ✅ Ensure both folders are created
 ```bash
 ansible-playbook -i hosts cmk_server.yml
 ```
@@ -768,7 +768,7 @@ checkmk_host_settings:
 ```
 
 **NOTE**
-> Create the host in the Web UI first and access the API to get syntax for attributes!
+> Create the host in the web UI first and use the API to determine the attribute syntax!
 
 ---
 
@@ -926,7 +926,7 @@ cmk-agent : ok=22 changed=4 unreachable=0 failed=0 skipped=25 rescued=0 ignored=
 
 # 👤 Checkmk configuration: Users
 
-- 🛠️ Create user **cmkuser** with email address **cmkuser@localhost** and member of contact group **Everything** and role **Normal user**
+- 🛠️ Create user **cmkuser** with email address **cmkuser@localhost**, membership in contact group **Everything** and role **Normal user**
 
 ```bash
 <EDITOR> host_vars/cmk-server.yml
@@ -955,7 +955,7 @@ checkmk_users:
 
 # 👤 Checkmk configuration: Users
 
-- 🛠️ Create user **cmkuser** with email address **cmkuser@localhost** and member of contact group **Everything** and role **Normal user**
+- 🛠️ Create user **cmkuser** with email address **cmkuser@localhost**, membership in contact group **Everything** and role **Normal user**
 - ➕ Add a new task after the existing tasks
 ```bash
 <EDITOR> cmk_server.yml
@@ -1021,7 +1021,7 @@ cmk-server                 : ok=22   changed=3    unreachable=0    failed=0    s
 
 # 🕒 Checkmk configuration: Downtimes
 
-- 🛠️ Create downtime for **15 minutes**
+- 🛠️ Create a **15-minute** downtime
 ```bash
 <EDITOR> cmk_downtime.yml
 ```
@@ -1062,7 +1062,7 @@ cmk-server                 : ok=22   changed=3    unreachable=0    failed=0    s
 
 # 🧪 LAB 11: Checkmk configuration: Downtimes
 
-- ✅ Ensure downtime is created
+- ✅ Ensure the downtime is created
 ```bash
 $ ansible-playbook -i hosts cmk_downtime.yml
 ```
@@ -1088,7 +1088,7 @@ cmk-agent                  : ok=2    changed=1    unreachable=0    failed=0    s
 
 # 📏 Checkmk configuration: Rules
 
-- 🛠️ Create a rule that sets the **Checkmk Agent** check to **warning** if the version is **different** from master and **critical** if **TLS** is **not activated**
+- 🛠️ Create a rule that sets the **Checkmk Agent** service to **warning** when its version differs from the site and to **critical** when **TLS** is disabled
 ```bash
 <EDITOR> host_vars/cmk-server.yml
 ```
@@ -1111,13 +1111,13 @@ checkmk_rules:
 ```
 
 **NOTE**
-> Create the rule in the Web UI first and access the API to get syntax for rule values!
+> Create the rule in the web UI first and use the API to determine the rule value syntax!
 
 ---
 
 # 📏 Checkmk configuration: Rules
 
-- 🛠️ Create a rule that sets the **Checkmk Agent** check to **warning** if the version is **different** from master and **critical** if **TLS** is **not activated**
+- 🛠️ Create a rule that sets the **Checkmk Agent** service to **warning** when its version differs from the site and to **critical** when **TLS** is disabled
 - ➕ Add a task after the existing tasks
 ```bash
 $ <EDITOR> cmk_server.yml
@@ -1178,7 +1178,7 @@ cmk-server                 : ok=23   changed=3    unreachable=0    failed=0    s
 
 # 🔐 Checkmk configuration: Passwords
 
-- 🛠️ Create a password for the site **authenticationtest.com**
+- 🛠️ Create a password for **authenticationtest.com**
 ```bash
 <EDITOR> host_vars/cmk-server.yml
 ```
@@ -1200,8 +1200,8 @@ checkmk_passwords:
 
 # 🔐 Checkmk configuration: Passwords
 
-- 🛠️ Create a password for the site **authenticationtest.com**
-- ➕ Add tasks **before the Create rule** task!
+- 🛠️ Create a password for **authenticationtest.com**
+- ➕ Add the task **before the Create rule** task!
 ```bash
 <EDITOR> cmk_server.yml
 ```
@@ -1233,7 +1233,7 @@ checkmk_passwords:
 
 # 🔐 Checkmk configuration: Passwords
 
-- 🛠️ Create a password for the site **authenticationtest.com**
+- 🛠️ Create a password for **authenticationtest.com**
 - ➕ Add the rule to the existing rules
 ```bash
 <EDITOR> host_vars/cmk-server.yml
@@ -1265,7 +1265,7 @@ checkmk_rules:
 ```
 
 **NOTE**
-> Create the rule in the Web UI first and access the API to get syntax for rule values!
+> Create the rule in the web UI first and use the API to determine the rule value syntax!
 
 ---
 <!-- _class: conference-divider -->
@@ -1310,7 +1310,7 @@ cmk-server                 : ok=24   changed=4    unreachable=0    failed=0    s
 
 # 🔎 Checkmk lookup
 
-- 🖨️ Print **server version** of Checkmk server
+- 🖨️ Print the **Checkmk server version**
 - ➕ Add a task after the existing tasks
 ```bash
 <EDITOR> cmk_server.yml
@@ -1376,9 +1376,9 @@ cmk-server                 : ok=25   changed=4    unreachable=0    failed=0    s
 
 # 📚 Checkmk as Ansible inventory
 
-- ✅ Checkmk **should** be aware of all hosts
-- 📚 Can be a good source for Ansible
-- 🏷️ Most likely requires tag configuration
+- ✅ Checkmk **should** know about all hosts
+- 📚 Checkmk can be a good inventory source for Ansible
+- 🏷️ Grouping hosts usually requires tag configuration
 
 ---
 
@@ -1443,13 +1443,13 @@ checkmk_tag_groups:
 
 # 📚 Checkmk as Ansible inventory
 
-- 🛠️ Create an inventory config for Checkmk
+- 🛠️ Create an inventory configuration for Checkmk
 ```bash
 <EDITOR> checkmk.yml
 ```
 
 **NOTE**
-> Inventory plugin must end with checkmk.yml or checkmk.yaml!
+> The inventory plugin filename must end in `checkmk.yml` or `checkmk.yaml`!
 
 ---
 
@@ -1471,14 +1471,15 @@ groupsources:
 
 ---
 
-# Spoiler-Alert: Upcoming changes in inventory plugin
+# 🔮 Preview: Upcoming inventory plugin changes
 
-- Restrict hosts based on folder (recursive/non-recursive)
-- Exclude hosts based on certain tags
-- Convert hostnames to lower case
-- Append domains to hosts
+- 📁 Restrict hosts by folder recursively or non-recursively
+- 🏷️ Exclude hosts based on specific tags
+- 🔡 Convert hostnames to lowercase
+- 🌐 Append domains to hostnames
 
-Currently in development: https://github.com/Checkmk/ansible-collection-checkmk.general/blob/feature/inventory-host-filtering/plugins/inventory/checkmk.py
+- 🚧 In development:
+  https://github.com/Checkmk/ansible-collection-checkmk.general/blob/feature/inventory-host-filtering/plugins/inventory/checkmk.py
 
 ---
 <!-- _class: conference-divider -->
@@ -1585,9 +1586,9 @@ ansible-inventory -i checkmk.yml --host cmk-agent
   - Bake and sign Checkmk agents
 - 🏗️ `checkmk.general.site`
   - Create, update and manage Checkmk sites
-- `checkmk.general.dcd`
+- 🔄 `checkmk.general.dcd`
   - Manage dynamic host management
-- `checmk.general.ldap`
+- 👥 `checkmk.general.ldap`
   - Manage LDAP connections
 - 📚 Module documentation:
   https://galaxy.ansible.com/ui/repo/published/checkmk/general/content/
@@ -1617,7 +1618,7 @@ ansible-inventory -i checkmk.yml --host cmk-agent
 pip install ansible-rulebook
 ```
 
-- Install OpenJDP
+- ☕ Install OpenJDK
 
 ```bash
 sudo dnf install java-latest-openjdk
@@ -1665,7 +1666,7 @@ ansible-rulebook [1.3.0]
 
 ```bash
 #!/usr/bin/env bash
-# Event Driven Ansible
+# Event-Driven Ansible
 
 URL="${NOTIFY_PARAMETER_1}"
 
@@ -1743,7 +1744,7 @@ cmk-server                 : ok=27   changed=7    unreachable=0    failed=0    s
 
 # 🧪 LAB 16: Define the notification rule
 
-- Create notification rule **Forward alerts to Event-Driven Ansible** and send notifications to **localhost:5050**.
+- 🛠️ Create the notification rule **Forward alerts to Event-Driven Ansible** and send notifications to **localhost:5050**
 ```bash
 <EDITOR> host_vars/cmk-server.yml
 ```
@@ -1776,7 +1777,7 @@ checkmk_notifications:
 
 # 🧪 LAB 16: Define the notification rule
 
-- Create notification rule **Forward alerts to Event-Driven Ansible** and send notifications to **localhost:5050**.
+- 🛠️ Create the notification rule **Forward alerts to Event-Driven Ansible** and send notifications to **localhost:5050**
 ```bash
 <EDITOR> cmk_server.yml
 ```
@@ -1801,7 +1802,9 @@ checkmk_notifications:
 
 ---
 
-- Ensure notification rule is created
+# 🧪 LAB 16: Create the notification rule
+
+- ✅ Ensure the notification rule is created
 
 ```bash
 ansible-playbook -i hosts cmk_server.yml
@@ -1822,7 +1825,7 @@ cmk-server                 : ok=28   changed=6    unreachable=0    failed=0    s
 
 # 🧪 LAB 16: Create the remediation playbook
 
-- 🛠️ Create playbook to **Restart Checkmk agent**.
+- 🛠️ Create a playbook that **restarts the Checkmk agent**
 
 ```bash
 <EDITOR> restart_checkmk_agent.yml
@@ -1849,7 +1852,7 @@ cmk-server                 : ok=28   changed=6    unreachable=0    failed=0    s
 
 # 🧪 LAB 16: Create the rulebook
 
-- 🛠️ Create rulebook to **Listen on port 5050**, require password **checkmk-workshop** and check for **failed Checkmk agent**.
+- 🛠️ Create a rulebook that **listens on port 5050** and checks for a **failed Checkmk agent**
 
 ```bash
 mkdir rulebooks
@@ -1947,7 +1950,7 @@ cmk-agent                  : ok=2    changed=1    unreachable=0    failed=0    s
 
 # 💬 Feedback
 
-- https://forms.gle/ki6KjQF9KS6BavmU8
+- 🔗 https://forms.gle/ki6KjQF9KS6BavmU8
 
 ![w:260](assets/odp/10000000000001C2000001C2D91A1DDE.png)
 
@@ -1955,6 +1958,6 @@ cmk-agent                  : ok=2    changed=1    unreachable=0    failed=0    s
 
 # 🙏 Thank you for participating
 
-- DI (FH) René Koch
-- Freelancer
-- The Checkmk Conference #12, 18.06.2026
+- 👤 DI (FH) René Koch
+- 💼 Freelancer
+- 📅 The Checkmk Conference #12, 18.06.2026
