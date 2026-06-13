@@ -1,0 +1,85 @@
+---
+
+- name: Prepare vms with required tools
+  hosts: all
+  gather_facts: true
+  become: true
+
+  vars:
+    packages:
+      - vim-enhanced
+      - nano
+      - openssl
+      - python3-pip
+      - git
+      - sudo
+    password: '$y$j9T$nP8NIU80VC2klF9oPvVIN.$B/RFMhxm80.25F2PuLiMWuCSqy3lwEyIu.D6Tgvf7B8'
+
+  tasks:
+    - name: Deploy required packages
+      ansible.builtin.dnf:
+        name: "{{ packages }}"
+        state: present
+
+    - name: Ensure firewalld is installed
+      ansible.builtin.dnf:
+        name: firewalld
+        state: present
+
+    - name: Start and enable firewalld
+      ansible.builtin.service:
+        name: firewalld
+        enabled: true
+        state: started
+
+    - name: Ensure group ansible exists
+      ansible.builtin.group:
+        name: ansible
+        state: present
+
+    - name: Ensure user ansible exists
+      ansible.builtin.user:
+        name: ansible
+        group: ansible
+        home: /home/ansible
+        shell: /bin/bash
+        password: "{{ password }}"
+        update_password: always
+        state: present
+
+    - name: Ensure password for root is set
+      ansible.builtin.user:
+        name: root
+        password: "{{ password }}"
+        update_password: always
+        state: present
+
+    - name: Ensure user ansible has sudo permissions
+      ansible.builtin.copy:
+        content: "ansible ALL=(ALL) NOPASSWD: ALL"
+        dest: /etc/sudoers.d/ansible
+        owner: root
+        group: root
+        mode: "0640"
+
+    - name: Remove cloud-init
+      ansible.builtin.dnf:
+        name: cloud-init
+        state: absent
+
+    - name: Allow password authentication in ssh
+      ansible.builtin.file:
+        path: /etc/ssh/sshd_config.d/50-cloud-init.conf
+        state: absent
+      notify: Restart sshd
+
+    - name: Test Checkmk server download
+      ansible.builtin.get_url:
+        url: https://download.checkmk.com/checkmk/2.5.0p6/check-mk-community-2.5.0p6-el10-38.x86_64.rpm
+        dest: /tmp/check-mk-community-2.5.0p6-el10-38.x86_64.rpm
+
+  handlers:
+    - name: Restart sshd
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
