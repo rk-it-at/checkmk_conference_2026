@@ -104,8 +104,22 @@ git clone https://github.com/rk-it-at/checkmk_conference_2026.git
 
 # 🧪 Preparing the LAB environment
 
+- ✅ Solutions for all labs are available in the GitHub repository:
+  https://github.com/rk-it-at/checkmk_conference_2026
+- 📄 Workshop slides as PDF:
+  https://rk-it-at.github.io/checkmk_conference_2026/slides.pdf
+- 🌐 Workshop slides on GitHub Pages:
+  https://rk-it-at.github.io/checkmk_conference_2026/
+
+---
+
+# 🧪 Preparing the LAB environment
+
 - 🖥️ Available VMs (if you do not have your own)
-- 🔐 Passwords: <TODO>
+- 🐧 Operating system: AlmaLinux 10.2
+- ✏️ Editors: Vim and Nano
+- 🧰 Pre-installed tools: Git, Python and pip
+- 🔐 Passwords: AnsibleW0rkshop2026!
 
 ---
 
@@ -132,6 +146,7 @@ git clone https://github.com/rk-it-at/checkmk_conference_2026.git
 | ansible-ws-8 |  | ansible |  |
 | ansible-ws-9 |  | ansible |  |
 | ansible-ws-10 |  | ansible |  |
+| ansible-ws-11 |  | ansible |  |
 
 ---
 
@@ -1950,7 +1965,7 @@ cmk-agent                  : ok=2    changed=1    unreachable=0    failed=0    s
 
 # 💬 Feedback
 
-- 🔗 https://forms.gle/ki6KjQF9KS6BavmU8
+- 🔗 https://forms.gle/Xsrwr6GqxRHTe32Z7
 
 ![w:260](assets/odp/10000000000001C2000001C2D91A1DDE.png)
 

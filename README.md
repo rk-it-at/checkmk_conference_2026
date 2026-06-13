@@ -1,9 +1,20 @@
-# Material for Checkmk Conference 2026 Workshop
+# Checkmk Conference 2026 Workshop
 
-Workshop: Automate Checkmk with Ansible
+Material for the **Automate Checkmk with Ansible** workshop at Checkmk Conference #12.
 
-- [Slides source](slides.md): Marp version of the 2025 workshop deck
+## Workshop material
+
+- [Workshop slides on GitHub Pages](https://rk-it-at.github.io/checkmk_conference_2026/)
+- [Workshop slides as PDF](https://rk-it-at.github.io/checkmk_conference_2026/slides.pdf)
+- [Marp slide source](slides.md)
+- [GitHub repository](https://github.com/rk-it-at/checkmk_conference_2026)
+
+## Lab solutions
+
+The repository contains the completed files for every lab that creates or modifies configuration:
+
 - [LAB 1](lab1/etc/sudoers.d): Configure sudo
+- **LAB 2**: Install and verify Ansible, no solution files required
 - [LAB 3](lab3/playbooks): Add target to Ansible inventory
 - [LAB 4](lab4/playbooks): Install Checkmk server
 - [LAB 5](lab5/playbooks): Secure Checkmk server
@@ -17,7 +28,7 @@ Workshop: Automate Checkmk with Ansible
 - [LAB 13](lab13/playbooks): Checkmk configuration: Passwords
 - [LAB 14](lab14/playbooks): Checkmk lookups
 - [LAB 15](lab15/playbooks): Checkmk as Ansible inventory
-- [LAB 16](lab16/playbooks): Self-healing Checkmk agent with Event-Driven Ansible
+- [LAB 16](lab16/playbooks): Bonus lab for a self-healing Checkmk agent with Event-Driven Ansible
 
 ## Build slides
 
@@ -28,12 +39,15 @@ npm run build
 
 The Marp build creates `dist/index.html` and `dist/slides.pdf`.
 
-The migrated deck is native Marp Markdown generated from the 2025 ODP source.
-Some original embedded screenshots and logos are kept as individual image assets.
+Pushes to the `main` branch deploy the HTML presentation and PDF to GitHub Pages
+through [the Marp workflow](.github/workflows/marp.yml).
+
+The deck uses native Marp Markdown. Images, screenshots and conference branding
+are stored in `assets`.
 
 ## Important links
 
-- [Checkmk collection on Github](https://github.com/Checkmk/ansible-collection-checkmk.general)
+- [Checkmk collection on GitHub](https://github.com/Checkmk/ansible-collection-checkmk.general)
 - [Checkmk collection on Ansible Galaxy](https://galaxy.ansible.com/ui/repo/published/checkmk/general/)
 - [Checkmk documentation](https://docs.checkmk.com/latest/en/)
 - [Checkmk API documentation](https://docs.checkmk.com/latest/en/rest_api.html)
